@@ -9,6 +9,7 @@ import ca.ulaval.glo4002.cafe.api.exception.mapper.CafeExceptionMapper;
 import ca.ulaval.glo4002.cafe.api.exception.mapper.CatchallExceptionMapper;
 import ca.ulaval.glo4002.cafe.api.exception.mapper.ConstraintViolationExceptionMapper;
 import ca.ulaval.glo4002.cafe.api.reservation.ReservationResource;
+import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerFactory;
 import ca.ulaval.glo4002.cafe.domain.reservation.ReservationFactory;
@@ -26,13 +27,25 @@ public class ProductionApplicationContext implements ApplicationContext {
 
         ReservationService groupService = new ReservationService(cafeRepository, new ReservationFactory());
         CustomerService customersService = new CustomerService(cafeRepository, new CustomerFactory());
-        CafeService cafeService = new CafeService(cafeRepository, new CafeFactory());
+        CafeService cafeService = new CafeService(cafeRepository);
 
-        cafeService.initializeCafe();
+        initializeCafe(cafeRepository);
 
+        return createResourceConfig(cafeService, groupService, customersService);
+    }
+
+    private void initializeCafe(CafeRepository cafeRepository) {
+        Cafe cafe = new CafeFactory().createCafe();
+        cafeRepository.saveOrUpdate(cafe);
+    }
+
+    private ResourceConfig createResourceConfig(CafeService cafeService, ReservationService groupService, CustomerService customersService) {
         return new ResourceConfig().packages("ca.ulaval.glo4002.cafe").property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true)
-            .register(new CafeResource(cafeService, customersService)).register(new CustomerResource(customersService))
-            .register(new ReservationResource(groupService)).register(new CafeExceptionMapper()).register(new CatchallExceptionMapper())
+            .register(new CafeResource(cafeService, customersService))
+            .register(new CustomerResource(customersService))
+            .register(new ReservationResource(groupService))
+            .register(new CafeExceptionMapper())
+            .register(new CatchallExceptionMapper())
             .register(new ConstraintViolationExceptionMapper());
     }
 

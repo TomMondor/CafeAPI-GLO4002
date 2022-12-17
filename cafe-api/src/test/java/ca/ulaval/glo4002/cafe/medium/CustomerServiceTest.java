@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerNotFoundException;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.SeatNumber;
@@ -45,8 +46,9 @@ public class CustomerServiceTest {
     public void instanciateAttributes() {
         cafeRepository = new InMemoryCafeRepository();
         customerService = new CustomerService(cafeRepository, new CustomerFactory());
-        cafeService = new CafeService(cafeRepository, new CafeFactory());
-        cafeService.initializeCafe();
+        cafeService = new CafeService(cafeRepository);
+        Cafe cafe = new CafeFactory().createCafe();
+        cafeRepository.saveOrUpdate(cafe);
     }
 
     @Test

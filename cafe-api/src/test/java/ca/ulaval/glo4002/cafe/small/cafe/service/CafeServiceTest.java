@@ -9,7 +9,6 @@ import org.mockito.ArgumentCaptor;
 
 import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeConfiguration;
-import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.fixture.CafeFixture;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeService;
@@ -27,29 +26,11 @@ public class CafeServiceTest {
     private static final IngredientsParams AN_INGREDIENTS_PARAMS = new IngredientsParams(1, 2, 3, 4);
     private CafeService cafeService;
     private CafeRepository cafeRepository;
-    private CafeFactory cafeFactory;
 
     @BeforeEach
     public void createCafeService() {
-        cafeFactory = mock(CafeFactory.class);
         cafeRepository = mock(CafeRepository.class);
-        cafeService = new CafeService(cafeRepository, cafeFactory);
-    }
-
-    @Test
-    public void whenInitializingCafe_shouldCreateCafe() {
-        cafeService.initializeCafe();
-
-        verify(cafeFactory).createCafe();
-    }
-
-    @Test
-    public void whenInitializingCafe_shouldSaveCafe() {
-        when(cafeFactory.createCafe()).thenReturn(A_CAFE);
-
-        cafeService.initializeCafe();
-
-        verify(cafeRepository).saveOrUpdate(A_CAFE);
+        cafeService = new CafeService(cafeRepository);
     }
 
     @Test

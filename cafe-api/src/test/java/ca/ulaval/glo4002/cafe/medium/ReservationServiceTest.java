@@ -3,13 +3,13 @@ package ca.ulaval.glo4002.cafe.medium;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.domain.reservation.GroupName;
 import ca.ulaval.glo4002.cafe.domain.reservation.GroupSize;
 import ca.ulaval.glo4002.cafe.domain.reservation.ReservationFactory;
 import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
-import ca.ulaval.glo4002.cafe.service.CafeService;
 import ca.ulaval.glo4002.cafe.service.reservation.ReservationService;
 import ca.ulaval.glo4002.cafe.service.reservation.dto.ReservationDTO;
 import ca.ulaval.glo4002.cafe.service.reservation.parameter.ReservationRequestParams;
@@ -26,9 +26,9 @@ public class ReservationServiceTest {
     @BeforeEach
     public void instanciateAttributes() {
         CafeRepository cafeRepository = new InMemoryCafeRepository();
-        CafeService cafeService = new CafeService(cafeRepository, new CafeFactory());
         reservationService = new ReservationService(cafeRepository, new ReservationFactory());
-        cafeService.initializeCafe();
+        Cafe cafe = new CafeFactory().createCafe();
+        cafeRepository.saveOrUpdate(cafe);
     }
 
     @Test

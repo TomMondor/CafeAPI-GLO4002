@@ -39,9 +39,9 @@ public class CafeServiceTest {
     @BeforeEach
     public void instanciateAttributes() {
         cafeRepository = new InMemoryCafeRepository();
-        cafeService = new CafeService(cafeRepository, new CafeFactory());
-        cafeService.initializeCafe();
-        cafe = cafeRepository.get();
+        cafeService = new CafeService(cafeRepository);
+        cafe = new CafeFactory().createCafe();
+        cafeRepository.saveOrUpdate(cafe);
     }
 
     @Test
