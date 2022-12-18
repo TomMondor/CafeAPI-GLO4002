@@ -1,6 +1,7 @@
 package ca.ulaval.glo4002.cafe.medium;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +48,7 @@ public class CustomerServiceTest {
         cafeRepository = new InMemoryCafeRepository();
         customerService = new CustomerService(cafeRepository, new CustomerFactory());
         cafeService = new CafeService(cafeRepository);
-        Cafe cafe = new CafeFactory().createCafe();
+        Cafe cafe = new CafeFactory().createCafe(List.of());
         cafeRepository.saveOrUpdate(cafe);
     }
 

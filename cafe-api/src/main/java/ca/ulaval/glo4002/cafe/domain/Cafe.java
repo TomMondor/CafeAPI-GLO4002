@@ -21,6 +21,9 @@ import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Customer;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerId;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.bill.Bill;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
+import ca.ulaval.glo4002.cafe.domain.menu.Menu;
+import ca.ulaval.glo4002.cafe.domain.menu.MenuItem;
+import ca.ulaval.glo4002.cafe.domain.menu.MenuItemName;
 import ca.ulaval.glo4002.cafe.domain.reservation.GroupName;
 import ca.ulaval.glo4002.cafe.domain.reservation.Reservation;
 import ca.ulaval.glo4002.cafe.domain.reservation.ReservationStrategyFactory;
@@ -32,19 +35,21 @@ public class Cafe {
     private final List<Reservation> reservations = new ArrayList<>();
     private final HashMap<CustomerId, Bill> bills = new HashMap<>();
     private final Inventory inventory;
+    private final Menu menu;
     private TipRate groupTipRate;
     private CubeSize cubeSize;
     private CafeName cafeName;
     private Location location;
     private ReservationStrategy reservationStrategy;
 
-    public Cafe(List<CubeName> cubeNames, CafeConfiguration cafeConfiguration) {
+    public Cafe(List<CubeName> cubeNames, CafeConfiguration cafeConfiguration, Menu menu) {
         reservationStrategyFactory = new ReservationStrategyFactory();
 
         LayoutFactory layoutFactory = new LayoutFactory();
         this.layout = layoutFactory.createLayout(cafeConfiguration.cubeSize(), cubeNames);
 
         this.inventory = new Inventory();
+        this.menu = menu;
 
         updateConfiguration(cafeConfiguration);
     }
@@ -80,6 +85,14 @@ public class Cafe {
 
     public Seat getSeatByCustomerId(CustomerId customerId) {
         return layout.getSeatByCustomerId(customerId);
+    }
+
+    public void addMenuItem(MenuItem newMenuItem) {
+        menu.addMenuItem(newMenuItem);
+    }
+
+    public MenuItem findMenuItemByName(MenuItemName itemName) {
+        return menu.findMenuItemByName(itemName);
     }
 
     public Order getOrderByCustomerId(CustomerId customerId) {

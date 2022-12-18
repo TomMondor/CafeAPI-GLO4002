@@ -1,5 +1,7 @@
 package ca.ulaval.glo4002.cafe.medium;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +29,7 @@ public class ReservationServiceTest {
     public void instanciateAttributes() {
         CafeRepository cafeRepository = new InMemoryCafeRepository();
         reservationService = new ReservationService(cafeRepository, new ReservationFactory());
-        Cafe cafe = new CafeFactory().createCafe();
+        Cafe cafe = new CafeFactory().createCafe(List.of());
         cafeRepository.saveOrUpdate(cafe);
     }
 

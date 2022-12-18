@@ -10,12 +10,17 @@ import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.domain.CafeName;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.Cube;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.CubeName;
+import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Amount;
+import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Recipe;
+import ca.ulaval.glo4002.cafe.domain.menu.MenuItem;
+import ca.ulaval.glo4002.cafe.domain.menu.MenuItemName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CafeFactoryTest {
 
     private static final CafeName DEFAULT_CAFE_NAME = new CafeName("Les 4-Fées");
+    private static final List<MenuItem> DEFAULT_MENU_ITEMS = List.of(new MenuItem(new MenuItemName("item"), new Amount(1), new Recipe(List.of())));
 
     private CafeFactory cafeFactory;
 
@@ -26,7 +31,7 @@ public class CafeFactoryTest {
 
     @Test
     public void whenCreatingCafe_shouldHaveDefaultName() {
-        Cafe cafe = cafeFactory.createCafe();
+        Cafe cafe = cafeFactory.createCafe(DEFAULT_MENU_ITEMS);
 
         assertEquals(DEFAULT_CAFE_NAME, cafe.getName());
     }
@@ -35,8 +40,17 @@ public class CafeFactoryTest {
     public void whenCreatingCafe_shouldCreateCubesListWithSortedSpecificCubesNames() {
         List<CubeName> expectedCubeNames = List.of(new CubeName("Bloom"), new CubeName("Merryweather"), new CubeName("Tinker Bell"), new CubeName("Wanda"));
 
-        Cafe cafe = cafeFactory.createCafe();
+        Cafe cafe = cafeFactory.createCafe(DEFAULT_MENU_ITEMS);
 
         assertEquals(expectedCubeNames, cafe.getLayout().getCubes().stream().map(Cube::getName).toList());
+    }
+
+    @Test
+    public void whenCreatingCafe_shouldContainDefaultMenuItems() {
+        MenuItem defaultItem = new MenuItem(new MenuItemName("item"), new Amount(1), new Recipe(List.of()));
+
+        Cafe cafe = cafeFactory.createCafe(List.of(defaultItem));
+
+        assertEquals(defaultItem, cafe.findMenuItemByName(defaultItem.name()));
     }
 }

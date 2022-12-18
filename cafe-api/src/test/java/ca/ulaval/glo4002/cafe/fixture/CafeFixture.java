@@ -12,6 +12,7 @@ import ca.ulaval.glo4002.cafe.domain.Province;
 import ca.ulaval.glo4002.cafe.domain.TipRate;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.CubeName;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.CubeSize;
+import ca.ulaval.glo4002.cafe.domain.menu.Menu;
 import ca.ulaval.glo4002.cafe.domain.reservation.ReservationType;
 
 public class CafeFixture {
@@ -22,6 +23,7 @@ public class CafeFixture {
     private CubeSize cubeSize = new CubeSize(4);
     private TipRate groupTipRate = new TipRate(0.05f);
     private Location location = new Location(Country.CA, Optional.of(Province.AB), Optional.empty());
+    private Menu menu = new Menu();
 
     public CafeFixture withName(CafeName name) {
         this.name = name;
@@ -48,8 +50,13 @@ public class CafeFixture {
         return this;
     }
 
+    public CafeFixture withMenu(Menu menu) {
+        this.menu = menu;
+        return this;
+    }
+
     public Cafe build() {
         CafeConfiguration cafeConfiguration = new CafeConfiguration(cubeSize, name, RESERVATION_STRATEGY_TYPE, location, groupTipRate);
-        return new Cafe(cubeNames, cafeConfiguration);
+        return new Cafe(cubeNames, cafeConfiguration, menu);
     }
 }
