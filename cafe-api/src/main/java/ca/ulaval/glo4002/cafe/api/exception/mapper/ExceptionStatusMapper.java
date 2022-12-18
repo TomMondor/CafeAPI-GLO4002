@@ -8,6 +8,7 @@ import ca.ulaval.glo4002.cafe.domain.exception.CustomerNoBillException;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerNotFoundException;
 import ca.ulaval.glo4002.cafe.domain.exception.DuplicateCubeNameException;
 import ca.ulaval.glo4002.cafe.domain.exception.DuplicateGroupNameException;
+import ca.ulaval.glo4002.cafe.domain.exception.DuplicateMenuItemNameException;
 import ca.ulaval.glo4002.cafe.domain.exception.IngredientTypeMismatchException;
 import ca.ulaval.glo4002.cafe.domain.exception.InsufficientIngredientsException;
 import ca.ulaval.glo4002.cafe.domain.exception.InsufficientSeatsException;
@@ -66,6 +67,7 @@ public class ExceptionStatusMapper {
         exceptionMapper.put(CustomerNoBillException.class, Response.Status.BAD_REQUEST);
         exceptionMapper.put(InvalidQuantityException.class, Response.Status.BAD_REQUEST);
         exceptionMapper.put(InvalidGroupTipRateException.class, Response.Status.BAD_REQUEST);
+        exceptionMapper.put(DuplicateMenuItemNameException.class, Response.Status.BAD_REQUEST);
 
         exceptionMapper.put(DuplicateCubeNameException.class, Response.Status.INTERNAL_SERVER_ERROR);
         exceptionMapper.put(SeatAlreadyOccupiedException.class, Response.Status.INTERNAL_SERVER_ERROR);
