@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import ca.ulaval.glo4002.cafe.api.CafeResource;
 import ca.ulaval.glo4002.cafe.api.request.CheckInRequest;
 import ca.ulaval.glo4002.cafe.api.request.CheckOutRequest;
+import ca.ulaval.glo4002.cafe.api.request.CoffeeRequest;
 import ca.ulaval.glo4002.cafe.api.request.ConfigurationRequest;
 import ca.ulaval.glo4002.cafe.api.request.InventoryRequest;
 import ca.ulaval.glo4002.cafe.domain.CafeName;
@@ -22,6 +23,7 @@ import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckInCustomerParams;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckOutCustomerParams;
 import ca.ulaval.glo4002.cafe.service.dto.InventoryDTO;
 import ca.ulaval.glo4002.cafe.service.dto.LayoutDTO;
+import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
 
@@ -49,6 +51,9 @@ public class CafeResourceTest {
     private static final int ESPRESSO = 1;
     private static final int MILK = 1;
     private static final int WATER = 1;
+    private static final float A_COST = 1.0f;
+    private static final String A_NAME = "coffee";
+    private static final InventoryRequest SOME_INGREDIENTS = new InventoryRequestFixture().build();
 
     private CafeService cafeService;
     private CustomerService customerService;
@@ -246,6 +251,32 @@ public class CafeResourceTest {
         when(cafeService.getInventory()).thenReturn(A_INVENTORY_DTO);
 
         Response response = cafeResource.getInventory();
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void whenAddingMenuItem_shouldAddMenuItem() {
+        CoffeeRequest coffeeRequest = new CoffeeRequest();
+        coffeeRequest.cost = A_COST;
+        coffeeRequest.name = A_NAME;
+        coffeeRequest.ingredients = SOME_INGREDIENTS;
+        CoffeeParams expectedParams = new CoffeeParams(A_NAME, A_COST,
+            new IngredientsParams(SOME_INGREDIENTS.Chocolate, SOME_INGREDIENTS.Milk, SOME_INGREDIENTS.Water, SOME_INGREDIENTS.Espresso));
+
+        cafeResource.addMenuItem(coffeeRequest);
+
+        verify(cafeService).addMenuItem(expectedParams);
+    }
+
+    @Test
+    public void givenValidRequest_whenAddingMenuItem_shouldReturn200() {
+        CoffeeRequest coffeeRequest = new CoffeeRequest();
+        coffeeRequest.cost = A_COST;
+        coffeeRequest.name = A_NAME;
+        coffeeRequest.ingredients = SOME_INGREDIENTS;
+
+        Response response = cafeResource.addMenuItem(coffeeRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }

@@ -7,6 +7,7 @@ import ca.ulaval.glo4002.cafe.api.layout.assembler.LayoutResponseAssembler;
 import ca.ulaval.glo4002.cafe.api.layout.response.LayoutResponse;
 import ca.ulaval.glo4002.cafe.api.request.CheckInRequest;
 import ca.ulaval.glo4002.cafe.api.request.CheckOutRequest;
+import ca.ulaval.glo4002.cafe.api.request.CoffeeRequest;
 import ca.ulaval.glo4002.cafe.api.request.ConfigurationRequest;
 import ca.ulaval.glo4002.cafe.api.request.InventoryRequest;
 import ca.ulaval.glo4002.cafe.api.response.InventoryResponse;
@@ -14,6 +15,7 @@ import ca.ulaval.glo4002.cafe.service.CafeService;
 import ca.ulaval.glo4002.cafe.service.customer.CustomerService;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckInCustomerParams;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckOutCustomerParams;
+import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
 
@@ -93,6 +95,20 @@ public class CafeResource {
         IngredientsParams ingredientsParams =
             IngredientsParams.from(inventoryRequest.Chocolate, inventoryRequest.Milk, inventoryRequest.Water, inventoryRequest.Espresso);
         cafeService.addIngredientsToInventory(ingredientsParams);
+        return Response.status(200).build();
+    }
+
+    @POST
+    @Path("/menu")
+    public Response addMenuItem(@Valid CoffeeRequest coffeeRequest) {
+        IngredientsParams ingredientsParams = IngredientsParams.from(
+            coffeeRequest.ingredients.Chocolate,
+            coffeeRequest.ingredients.Milk,
+            coffeeRequest.ingredients.Water,
+            coffeeRequest.ingredients.Espresso);
+        CoffeeParams coffeeParams = CoffeeParams.from(coffeeRequest.name, coffeeRequest.cost, ingredientsParams);
+
+        cafeService.addMenuItem(coffeeParams);
         return Response.status(200).build();
     }
 }

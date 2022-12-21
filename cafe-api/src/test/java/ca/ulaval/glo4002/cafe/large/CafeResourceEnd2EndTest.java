@@ -10,11 +10,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ca.ulaval.glo4002.cafe.api.customer.request.OrderRequest;
 import ca.ulaval.glo4002.cafe.api.layout.SeatStatus;
 import ca.ulaval.glo4002.cafe.api.layout.response.CubeResponse;
 import ca.ulaval.glo4002.cafe.api.layout.response.LayoutResponse;
 import ca.ulaval.glo4002.cafe.api.request.CheckInRequest;
 import ca.ulaval.glo4002.cafe.api.request.CheckOutRequest;
+import ca.ulaval.glo4002.cafe.api.request.CoffeeRequest;
 import ca.ulaval.glo4002.cafe.api.request.ConfigurationRequest;
 import ca.ulaval.glo4002.cafe.api.request.InventoryRequest;
 import ca.ulaval.glo4002.cafe.api.reservation.request.ReservationRequest;
@@ -27,6 +29,7 @@ import ca.ulaval.glo4002.cafe.fixture.SeatFixture;
 import ca.ulaval.glo4002.cafe.fixture.request.CheckInRequestFixture;
 import ca.ulaval.glo4002.cafe.fixture.request.ConfigurationRequestFixture;
 import ca.ulaval.glo4002.cafe.fixture.request.InventoryRequestFixture;
+import ca.ulaval.glo4002.cafe.fixture.request.OrderRequestFixture;
 import ca.ulaval.glo4002.cafe.fixture.request.ReservationRequestFixture;
 
 import static io.restassured.RestAssured.given;
@@ -41,6 +44,9 @@ class CafeResourceEnd2EndTest {
     private static final String A_VALID_GROUP_NAME = "test_group";
     private static final CheckInRequest A_VALID_CHECK_IN_REQUEST = new CheckInRequestFixture().withCustomerId(A_VALID_ID).build();
     private static final int A_VALID_STOCK = 100;
+    private static final float A_COST = 1.0f;
+    private static final String A_COFFEE_NAME = "coffee";
+    private static final InventoryRequest SOME_INGREDIENTS = new InventoryRequestFixture().build();
 
     private TestServer server;
 
@@ -241,13 +247,52 @@ class CafeResourceEnd2EndTest {
         assertEquals(A_VALID_STOCK, body.Water());
     }
 
+    @Test
+    public void whenAddingMenuItem_shouldReturn200() {
+        CoffeeRequest coffeeRequest = new CoffeeRequest();
+        coffeeRequest.cost = A_COST;
+        coffeeRequest.name = A_COFFEE_NAME;
+        coffeeRequest.ingredients = SOME_INGREDIENTS;
+
+        Response response = given().contentType("application/json").body(coffeeRequest).when().post(BASE_URL + "/menu");
+
+        assertEquals(200, response.getStatusCode());
+    }
+
+    @Test
+    public void whenAddingMenuItem_shouldBeAvailableInMenu() {
+        fullInventory();
+        CoffeeRequest coffeeRequest = new CoffeeRequest();
+        coffeeRequest.cost = A_COST;
+        coffeeRequest.name = A_COFFEE_NAME;
+        coffeeRequest.ingredients = SOME_INGREDIENTS;
+
+        given().contentType("application/json").body(coffeeRequest).when().post(BASE_URL + "/menu");
+
+        postCheckInWithCustomerId(A_VALID_ID);
+        OrderRequest orderRequest = new OrderRequestFixture().withOrders(List.of(A_COFFEE_NAME)).build();
+        Response response = given().contentType("application/json").body(orderRequest).put(BASE_URL + "/customers/" + A_VALID_ID + "/orders");
+        assertEquals(200, response.getStatusCode());
+    }
+
     private void postCheckInWithCheckInRequest(CheckInRequest checkInRequest) {
         given().contentType("application/json").body(checkInRequest).when().post(BASE_URL + "/check-in");
+    }
+
+    private void postCheckInWithCustomerId(String customerId) {
+        CheckInRequest checkInRequest = new CheckInRequestFixture().withCustomerId(customerId).build();
+        postCheckInWithCheckInRequest(checkInRequest);
     }
 
     private void postReservationWithGroupName(String groupName) {
         ReservationRequest reservationRequest = (new ReservationRequestFixture()).withGroupName(groupName).withGroupSize(2).build();
         given().contentType("application/json").body(reservationRequest).when().post(BASE_URL + "/reservations");
+    }
+
+    private void fullInventory() {
+        InventoryRequest inventoryRequest =
+            new InventoryRequestFixture().withChocolate(A_VALID_STOCK).withEspresso(A_VALID_STOCK).withMilk(A_VALID_STOCK).withWater(A_VALID_STOCK).build();
+        given().contentType("application/json").body(inventoryRequest).put(BASE_URL + "/inventory");
     }
 
     private List<CubeResponse> createListOfExpectedValidCube() {
