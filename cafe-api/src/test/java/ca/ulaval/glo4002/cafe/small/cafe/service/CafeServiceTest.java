@@ -9,11 +9,13 @@ import org.mockito.ArgumentCaptor;
 
 import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeConfiguration;
+import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
 import ca.ulaval.glo4002.cafe.fixture.CafeFixture;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeService;
 import ca.ulaval.glo4002.cafe.service.dto.InventoryDTO;
 import ca.ulaval.glo4002.cafe.service.dto.LayoutDTO;
+import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
 
@@ -24,6 +26,7 @@ public class CafeServiceTest {
     private static final Cafe A_CAFE = new CafeFixture().build();
     private static final ConfigurationParams A_CONFIGURATION_PARAMS = new ConfigurationParams(4, "Les 4-Fées", "Default", "CA", "QC", "", 5);
     private static final IngredientsParams AN_INGREDIENTS_PARAMS = new IngredientsParams(1, 2, 3, 4);
+    private static final CoffeeParams A_COFFEE_PARAMS = new CoffeeParams("coffee name", 3.25f, AN_INGREDIENTS_PARAMS);
     private CafeService cafeService;
     private CafeRepository cafeRepository;
 
@@ -178,5 +181,35 @@ public class CafeServiceTest {
         InventoryDTO actualInventoryDTO = cafeService.getInventory();
 
         assertEquals(expectedInventoryDTO, actualInventoryDTO);
+    }
+
+    @Test
+    public void whenAddingMenuItem_shouldGetCafe() {
+        Cafe mockCafe = mock(Cafe.class);
+        when(cafeRepository.get()).thenReturn(mockCafe);
+
+        cafeService.addMenuItem(A_COFFEE_PARAMS);
+
+        verify(cafeRepository).get();
+    }
+
+    @Test
+    public void whenAddingMenuItem_shouldAddMenuItem() {
+        Cafe mockCafe = mock(Cafe.class);
+        when(cafeRepository.get()).thenReturn(mockCafe);
+
+        cafeService.addMenuItem(A_COFFEE_PARAMS);
+
+        verify(mockCafe).addMenuItem(new Coffee(A_COFFEE_PARAMS.name(), A_COFFEE_PARAMS.cost(), A_COFFEE_PARAMS.ingredients()));
+    }
+
+    @Test
+    public void whenAddingMenuItem_shouldUpdateCafe() {
+        Cafe mockCafe = mock(Cafe.class);
+        when(cafeRepository.get()).thenReturn(mockCafe);
+
+        cafeService.addMenuItem(A_COFFEE_PARAMS);
+
+        verify(cafeRepository).saveOrUpdate(mockCafe);
     }
 }

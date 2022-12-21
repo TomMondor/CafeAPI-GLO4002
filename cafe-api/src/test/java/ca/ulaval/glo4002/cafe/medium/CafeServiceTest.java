@@ -12,6 +12,7 @@ import ca.ulaval.glo4002.cafe.domain.CafeName;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerNoBillException;
 import ca.ulaval.glo4002.cafe.domain.inventory.IngredientType;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Customer;
+import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.PendingOrder;
 import ca.ulaval.glo4002.cafe.domain.reservation.Reservation;
 import ca.ulaval.glo4002.cafe.fixture.CustomerFixture;
 import ca.ulaval.glo4002.cafe.fixture.ReservationFixture;
@@ -19,17 +20,18 @@ import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeService;
 import ca.ulaval.glo4002.cafe.service.dto.InventoryDTO;
+import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CafeServiceTest {
     private static final CafeName NEW_CAFE_NAME = new CafeName("Les 4-Ogres");
     private static final Customer A_CUSTOMER = new CustomerFixture().build();
     private static final Reservation A_RESERVATION = new ReservationFixture().build();
     private static final IngredientsParams INGREDIENT_PARAMS = new IngredientsParams(25, 20, 15, 10);
+    private static final CoffeeParams A_COFFEE_PARAMS = new CoffeeParams("coffee name", 3.25f, INGREDIENT_PARAMS);
     private static final ConfigurationParams CONFIGURATION_PARAMS = new ConfigurationParams(5, NEW_CAFE_NAME.value(), "Default", "CA",
         "QC", "", 5);
 
@@ -38,7 +40,7 @@ public class CafeServiceTest {
     private CafeRepository cafeRepository;
 
     @BeforeEach
-    public void instanciateAttributes() {
+    public void instantiateAttributes() {
         cafeRepository = new InMemoryCafeRepository();
         cafeService = new CafeService(cafeRepository);
         cafe = new CafeFactory().createCafe(List.of());
@@ -92,5 +94,16 @@ public class CafeServiceTest {
         assertEquals(INGREDIENT_PARAMS.milk().quantity(), inventory.ingredients().get(IngredientType.Milk).quantity());
         assertEquals(INGREDIENT_PARAMS.water().quantity(), inventory.ingredients().get(IngredientType.Water).quantity());
         assertEquals(INGREDIENT_PARAMS.espresso().quantity(), inventory.ingredients().get(IngredientType.Espresso).quantity());
+    }
+
+    @Test
+    public void whenAddingMenuItem_shouldAddMenuItem() {
+        cafeService.addIngredientsToInventory(INGREDIENT_PARAMS);
+        PendingOrder pendingOrder = new PendingOrder(List.of(A_COFFEE_PARAMS.name()));
+        cafe.checkIn(A_CUSTOMER, Optional.empty());
+
+        cafeService.addMenuItem(A_COFFEE_PARAMS);
+
+        assertDoesNotThrow(() -> cafe.placeOrder(A_CUSTOMER.getId(), pendingOrder));
     }
 }

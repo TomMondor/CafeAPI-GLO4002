@@ -4,8 +4,10 @@ import java.util.List;
 
 import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeConfiguration;
+import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
 import ca.ulaval.glo4002.cafe.service.dto.InventoryDTO;
 import ca.ulaval.glo4002.cafe.service.dto.LayoutDTO;
+import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
 
@@ -50,5 +52,11 @@ public class CafeService {
     public InventoryDTO getInventory() {
         Cafe cafe = cafeRepository.get();
         return InventoryDTO.fromInventory(cafe.getInventory());
+    }
+
+    public void addMenuItem(CoffeeParams coffeeParams) {
+        Cafe cafe = cafeRepository.get();
+        cafe.addMenuItem(new Coffee(coffeeParams.name(), coffeeParams.cost(), coffeeParams.ingredients()));
+        cafeRepository.saveOrUpdate(cafe);
     }
 }
