@@ -13,12 +13,14 @@ import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerFactory;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerId;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerName;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.bill.Bill;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Coffee;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.CoffeeType;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
+import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
+import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
 import ca.ulaval.glo4002.cafe.fixture.BillFixture;
+import ca.ulaval.glo4002.cafe.fixture.CoffeeFixture;
 import ca.ulaval.glo4002.cafe.fixture.CustomerFixture;
 import ca.ulaval.glo4002.cafe.fixture.OrderFixture;
+import ca.ulaval.glo4002.cafe.fixture.PendingOrderFixture;
 import ca.ulaval.glo4002.cafe.fixture.SeatFixture;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
 import ca.ulaval.glo4002.cafe.service.customer.CustomerService;
@@ -39,10 +41,12 @@ public class CustomerServiceTest {
     private static final CheckOutCustomerParams CHECKOUT_CUSTOMER_PARAMS = new CheckOutCustomerParams(CUSTOMER_ID.value());
     private static final Customer CUSTOMER = new CustomerFixture().withCustomerId(CUSTOMER_ID).withCustomerName(CUSTOMER_NAME).build();
     private static final Seat SEAT_WITH_CUSTOMER = new SeatFixture().withSeatNumber(new SeatNumber(1)).withCustomer(CUSTOMER).build();
-    private static final Coffee AN_AMERICANO_COFFEE = new Coffee(CoffeeType.Americano);
-    private static final Coffee A_DARK_ROAST_COFFEE = new Coffee(CoffeeType.DarkRoast);
+    private static final Coffee AN_AMERICANO_COFFEE = new CoffeeFixture().withAmericano().build();
+    private static final Coffee A_DARK_ROAST_COFFEE = new CoffeeFixture().withDarkRoast().build();
     private static final Order A_ORDER = new OrderFixture().build();
     private static final Bill A_VALID_BILL = new BillFixture().build();
+    private static final String A_COFFEE_NAME = "Americano";
+    private static final List<String> SOME_COFFEE_NAMES = List.of("Americano", "Dark Roast");
 
     private CustomerService customersService;
     private CustomerFactory customerFactory;
@@ -176,21 +180,21 @@ public class CustomerServiceTest {
 
     @Test
     public void whenPlacingOrder_shouldGetCafe() {
-        customersService.placeOrder(new CustomerOrderParams(CUSTOMER_ID.value(), List.of(CoffeeType.Americano.toString())));
+        customersService.placeOrder(new CustomerOrderParams(CUSTOMER_ID.value(), SOME_COFFEE_NAMES));
 
         verify(cafeRepository).get();
     }
 
     @Test
     public void whenPlacingOrder_shouldPlaceOrder() {
-        customersService.placeOrder(new CustomerOrderParams(CUSTOMER_ID.value(), List.of(CoffeeType.Americano.toString())));
+        customersService.placeOrder(new CustomerOrderParams(CUSTOMER_ID.value(), List.of(A_COFFEE_NAME)));
 
-        verify(mockCafe).placeOrder(CUSTOMER_ID, new OrderFixture().withItems(List.of(AN_AMERICANO_COFFEE)).build());
+        verify(mockCafe).placeOrder(CUSTOMER_ID, new PendingOrderFixture().withItems(List.of(new CoffeeName(A_COFFEE_NAME))).build());
     }
 
     @Test
     public void whenPlacingOrder_shouldUpdateCafe() {
-        customersService.placeOrder(new CustomerOrderParams(CUSTOMER_ID.value(), List.of(CoffeeType.Americano.toString())));
+        customersService.placeOrder(new CustomerOrderParams(CUSTOMER_ID.value(), List.of("Some coffee name")));
 
         verify(cafeRepository).saveOrUpdate(mockCafe);
     }

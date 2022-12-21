@@ -7,16 +7,16 @@ import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.cafe.api.customer.assembler.OrdersResponseAssembler;
 import ca.ulaval.glo4002.cafe.api.customer.response.OrdersResponse;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Coffee;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.CoffeeType;
+import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
+import ca.ulaval.glo4002.cafe.fixture.CoffeeFixture;
 import ca.ulaval.glo4002.cafe.fixture.OrderFixture;
 import ca.ulaval.glo4002.cafe.service.customer.dto.OrderDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrdersResponseAssemblerTest {
-    private static final Coffee AN_AMERICANO_COFFEE = new Coffee(CoffeeType.Americano);
-    private static final Coffee A_DARK_ROAST_COFFEE = new Coffee(CoffeeType.DarkRoast);
+    private static final Coffee AN_AMERICANO_COFFEE = new CoffeeFixture().withAmericano().build();
+    private static final Coffee A_DARK_ROAST_COFFEE = new CoffeeFixture().withDarkRoast().build();
 
     private OrdersResponseAssembler ordersResponseAssembler;
 

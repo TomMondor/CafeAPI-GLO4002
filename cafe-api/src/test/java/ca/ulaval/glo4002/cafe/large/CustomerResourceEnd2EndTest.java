@@ -17,9 +17,8 @@ import ca.ulaval.glo4002.cafe.api.request.CheckOutRequest;
 import ca.ulaval.glo4002.cafe.api.request.InventoryRequest;
 import ca.ulaval.glo4002.cafe.api.reservation.request.ReservationRequest;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Amount;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Coffee;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.CoffeeType;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
+import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.PendingOrder;
+import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
 import ca.ulaval.glo4002.cafe.fixture.request.CheckInRequestFixture;
 import ca.ulaval.glo4002.cafe.fixture.request.InventoryRequestFixture;
 import ca.ulaval.glo4002.cafe.fixture.request.ReservationRequestFixture;
@@ -35,8 +34,8 @@ public class CustomerResourceEnd2EndTest {
     private static final String CUSTOMER_NAME = "Keanu Reeves";
     private static final String GROUP_NAME = "Rise Against the Machine";
     private static final int FIRST_SEAT_NUMBER = 1;
-    private static final Order ORDERS = new Order(
-        List.of(new Coffee(CoffeeType.Espresso), new Coffee(CoffeeType.Espresso), new Coffee(CoffeeType.Latte), new Coffee(CoffeeType.Americano)));
+    private static final PendingOrder ORDERS = new PendingOrder(
+        List.of(new CoffeeName("Espresso"), new CoffeeName("Espresso"), new CoffeeName("Latte"), new CoffeeName("Americano")));
     private static final String A_VALID_COFFEE = "Latte";
     private static final String ANOTHER_VALID_COFFEE = "Americano";
     private static final Amount SUBTOTAL = new Amount(11.1f);
@@ -150,7 +149,7 @@ public class CustomerResourceEnd2EndTest {
         Response response = when().get(BASE_URL + "/customers/" + CUSTOMER_ID + "/bill");
         BillResponse actualBody = response.getBody().as(BillResponse.class);
 
-        assertEquals(ORDERS.items().stream().map(coffee -> coffee.coffeeType().toString()).toList(), actualBody.orders());
+        assertEquals(ORDERS.items().stream().map(CoffeeName::value).toList(), actualBody.orders());
         assertEquals(SUBTOTAL.getRoundedValue(), actualBody.subtotal());
         assertEquals(TAXES.getRoundedValue(), actualBody.taxes());
         assertEquals(TIP_RATE.getRoundedValue(), actualBody.tip());
@@ -200,7 +199,7 @@ public class CustomerResourceEnd2EndTest {
     private void givenCheckedOutCustomer() {
         givenCheckInCustomer();
         OrderRequest orderRequest = new OrderRequest();
-        orderRequest.orders = ORDERS.items().stream().map(coffee -> coffee.coffeeType().toString()).toList();
+        orderRequest.orders = ORDERS.items().stream().map(CoffeeName::value).toList();
         given().contentType("application/json").body(orderRequest).put(BASE_URL + "/customers/" + CUSTOMER_ID + "/orders");
         CheckOutRequest checkOutRequest = new CheckOutRequest();
         checkOutRequest.customer_id = CUSTOMER_ID;

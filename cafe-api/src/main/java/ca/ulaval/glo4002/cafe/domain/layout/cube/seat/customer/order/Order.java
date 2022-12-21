@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import ca.ulaval.glo4002.cafe.domain.inventory.Ingredient;
+import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
 
 public record Order(List<Coffee> items) {
     public Order addAll(Order otherOrder) {

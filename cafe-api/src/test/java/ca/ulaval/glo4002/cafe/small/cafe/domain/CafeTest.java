@@ -36,21 +36,22 @@ import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Amount;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Customer;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerId;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.bill.Bill;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Coffee;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.CoffeeType;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
+import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.PendingOrder;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Recipe;
+import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
+import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
 import ca.ulaval.glo4002.cafe.domain.menu.Menu;
-import ca.ulaval.glo4002.cafe.domain.menu.MenuItem;
-import ca.ulaval.glo4002.cafe.domain.menu.MenuItemName;
 import ca.ulaval.glo4002.cafe.domain.reservation.GroupName;
 import ca.ulaval.glo4002.cafe.domain.reservation.GroupSize;
 import ca.ulaval.glo4002.cafe.domain.reservation.Reservation;
 import ca.ulaval.glo4002.cafe.domain.reservation.ReservationType;
 import ca.ulaval.glo4002.cafe.fixture.CafeConfigurationFixture;
+import ca.ulaval.glo4002.cafe.fixture.CoffeeFixture;
 import ca.ulaval.glo4002.cafe.fixture.CustomerFixture;
 import ca.ulaval.glo4002.cafe.fixture.MenuFixture;
 import ca.ulaval.glo4002.cafe.fixture.OrderFixture;
+import ca.ulaval.glo4002.cafe.fixture.PendingOrderFixture;
 import ca.ulaval.glo4002.cafe.fixture.ReservationFixture;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -68,39 +69,45 @@ public class CafeTest {
     private static final Reservation ANOTHER_RESERVATION_FOR_TWO =
         new ReservationFixture().withGroupName(new GroupName("Another")).withGroupSize(new GroupSize(2)).build();
     private static final Order AN_ORDER = new OrderFixture().build();
-    private static final Order ANOTHER_ORDER = new OrderFixture().withItems(List.of(new Coffee(CoffeeType.Espresso))).build();
-    private static final Menu AN_EMPTY_MENU = new Menu();
-    private static final MenuItem A_MENU_ITEM = new MenuItem(new MenuItemName("menuItem"), new Amount(10), new Recipe(List.of()));
+    private static final PendingOrder THE_MATCHING_PENDING_ORDER = new PendingOrderFixture().fromOrder(AN_ORDER).build();
+    private static final PendingOrder A_PENDING_ORDER = THE_MATCHING_PENDING_ORDER;
+    private static final Order THE_MATCHING_ORDER = AN_ORDER;
+    private static final Order ANOTHER_ORDER = new OrderFixture().withItems(List.of(new CoffeeFixture().withEspresso().build())).build();
+    private static final Coffee A_MENU_ITEM = new Coffee(new CoffeeName("menuItem"), new Amount(10), new Recipe(List.of()));
+    private static Menu A_MENU = new Menu();
 
     private Cafe cafe;
 
     @BeforeEach
     public void createDefaultCafe() {
-        cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        A_MENU = new Menu();
+        A_MENU.addMenuItem(new CoffeeFixture().withAmericano().build());
+        A_MENU.addMenuItem(new CoffeeFixture().withEspresso().build());
+        cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), A_MENU);
     }
 
     @Test
     public void whenCreatingCafe_shouldHaveNoReservations() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
 
         assertTrue(cafe.getReservations().isEmpty());
     }
 
     @Test
     public void whenCreatingCafe_shouldHaveEmptyInventory() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
 
         assertTrue(cafe.getInventory().getIngredients().isEmpty());
     }
 
     @Test
     public void givenDuplicateCubeNames_whenCreatingCafe_shouldThrowException() {
-        assertThrows(DuplicateCubeNameException.class, () -> new Cafe(DUPLICATE_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU));
+        assertThrows(DuplicateCubeNameException.class, () -> new Cafe(DUPLICATE_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu()));
     }
 
     @Test
     public void whenGettingLayout_shouldHaveProvidedNumberOfCubesInLayout() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
 
         Layout layout = cafe.getLayout();
 
@@ -109,7 +116,7 @@ public class CafeTest {
 
     @Test
     public void whenGettingLayout_shouldHaveCubesWithProvidedNamesInLayout() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
 
         Layout layout = cafe.getLayout();
 
@@ -118,7 +125,7 @@ public class CafeTest {
 
     @Test
     public void whenGettingLayout_shouldHaveCubesInAlphabeticalOrderOfNameInLayout() {
-        Cafe cafe = new Cafe(SOME_UNORDERED_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_UNORDERED_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
 
         Layout layout = cafe.getLayout();
 
@@ -128,7 +135,7 @@ public class CafeTest {
     @Test
     public void whenGettingLayout_shouldHaveCubesWithProvidedNumberOfSeatsInLayout() {
         CubeSize providedCubeSize = new CubeSize(2);
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(providedCubeSize).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(providedCubeSize).build(), new Menu());
 
         Layout layout = cafe.getLayout();
 
@@ -137,7 +144,7 @@ public class CafeTest {
 
     @Test
     public void whenGettingLayout_shouldHaveCubesWithIncrementingSeatNumbersInLayout() {
-        Cafe cafe = new Cafe(TWO_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(TWO_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), new Menu());
 
         Layout layout = cafe.getLayout();
         List<Integer> actualSeatNumbers = layout.getCubes().stream().map(Cube::getSeats).flatMap(List::stream).map(seat -> seat.getNumber().value()).toList();
@@ -148,7 +155,7 @@ public class CafeTest {
 
     @Test
     public void givenNoReservationNorCustomer_whenGettingLayout_shouldHaveAllSeatsAvailableInLayout() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), new Menu());
 
         Layout layout = cafe.getLayout();
         int numberOfAvailableSeats = (int) layout.getCubes().stream().map(Cube::getSeats).flatMap(List::stream).filter(Seat::isCurrentlyAvailable).count();
@@ -158,7 +165,7 @@ public class CafeTest {
 
     @Test
     public void givenReservation_whenGettingLayout_shouldHaveMatchingSeatsReservedInLayout() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(new CubeSize(2)).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(new CubeSize(2)).build(), new Menu());
         cafe.makeReservation(A_RESERVATION_FOR_TWO);
 
         Layout layout = cafe.getLayout();
@@ -169,7 +176,7 @@ public class CafeTest {
 
     @Test
     public void givenNoAvailableSeats_whenCheckingIn_shouldThrowInsufficientSeatsException() {
-        Cafe cafe = new Cafe(A_CUBE_NAME, new CafeConfigurationFixture().withCubeSize(new CubeSize(3)).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(A_CUBE_NAME, new CafeConfigurationFixture().withCubeSize(new CubeSize(3)).build(), new Menu());
         cafe.checkIn(ANOTHER_CUSTOMER, Optional.empty());
         cafe.makeReservation(A_RESERVATION_FOR_TWO);
         Customer aCustomer = new CustomerFixture().build();
@@ -179,7 +186,7 @@ public class CafeTest {
 
     @Test
     public void givenNewCustomerWithoutReservation_whenCheckingIn_shouldOccupyFirstAvailableSeat() {
-        Cafe cafe = new Cafe(A_CUBE_NAME, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(A_CUBE_NAME, new CafeConfigurationFixture().build(), new Menu());
         cafe.checkIn(ANOTHER_CUSTOMER, Optional.empty());
         cafe.makeReservation(A_RESERVATION_FOR_TWO);
         Customer aCustomer = new CustomerFixture().build();
@@ -191,7 +198,7 @@ public class CafeTest {
 
     @Test
     public void givenNewCustomerWithReservation_whenCheckingIn_shouldOccupyFirstReservedSeat() {
-        Cafe cafe = new Cafe(A_CUBE_NAME, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(A_CUBE_NAME, new CafeConfigurationFixture().build(), new Menu());
         cafe.checkIn(ANOTHER_CUSTOMER, Optional.empty());
         cafe.makeReservation(A_RESERVATION_FOR_TWO);
         Customer aCustomer = new CustomerFixture().build();
@@ -203,7 +210,7 @@ public class CafeTest {
 
     @Test
     public void givenNewCustomerWithReservationButNoMoreReservedSeats_whenCheckingIn_shouldThrowNoGroupSeatsException() {
-        Cafe cafe = new Cafe(A_CUBE_NAME, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(A_CUBE_NAME, new CafeConfigurationFixture().build(), new Menu());
         cafe.makeReservation(A_RESERVATION_FOR_TWO);
         cafe.checkIn(A_CUSTOMER, Optional.of(A_RESERVATION_FOR_TWO.name()));
         cafe.checkIn(ANOTHER_CUSTOMER, Optional.of(A_RESERVATION_FOR_TWO.name()));
@@ -213,7 +220,7 @@ public class CafeTest {
 
     @Test
     public void givenNewCustomerWithInvalidReservation_whenCheckingIn_shouldThrowNoReservationFoundException() {
-        Cafe cafe = new Cafe(A_CUBE_NAME, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(A_CUBE_NAME, new CafeConfigurationFixture().build(), new Menu());
         cafe.makeReservation(A_RESERVATION_FOR_TWO);
         Customer aCustomer = new CustomerFixture().build();
 
@@ -264,7 +271,7 @@ public class CafeTest {
 
     @Test
     public void whenMakingReservation_shouldUseProvidedReservationStrategy() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withReservationType(ReservationType.FullCubes).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withReservationType(ReservationType.FullCubes).build(), new Menu());
 
         cafe.makeReservation(A_RESERVATION_FOR_TWO);
 
@@ -280,7 +287,7 @@ public class CafeTest {
 
     @Test
     public void givenNotEnoughSeats_whenMakingReservation_shouldThrowInsufficientSeatsException() {
-        Cafe cafe = new Cafe(A_CUBE_NAME, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(A_CUBE_NAME, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), new Menu());
         cafe.makeReservation(A_RESERVATION_FOR_TWO);
 
         assertThrows(InsufficientSeatsException.class, () -> cafe.makeReservation(ANOTHER_RESERVATION_FOR_TWO));
@@ -288,7 +295,7 @@ public class CafeTest {
 
     @Test
     public void givenNewReservationType_whenUpdatingConfiguration_shouldUseNewReservationStrategy() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withReservationType(ReservationType.Default).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withReservationType(ReservationType.Default).build(), new Menu());
 
         cafe.updateConfiguration(new CafeConfigurationFixture().withReservationType(ReservationType.FullCubes).build());
 
@@ -298,7 +305,7 @@ public class CafeTest {
 
     @Test
     public void givenNewName_whenUpdatingConfiguration_shouldUpdateName() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
         CafeName newName = new CafeName("newName");
 
         cafe.updateConfiguration(new CafeConfigurationFixture().withName(newName).build());
@@ -308,7 +315,7 @@ public class CafeTest {
 
     @Test
     public void givenNewCubeSize_whenUpdatingConfiguration_shouldUpdateCubeSize() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), new Menu());
         CubeSize newCubeSize = new CubeSize(3);
 
         cafe.updateConfiguration(new CafeConfigurationFixture().withCubeSize(newCubeSize).build());
@@ -319,13 +326,13 @@ public class CafeTest {
 
     @Test
     public void givenNewLocation_whenUpdatingConfiguration_shouldUpdateLocation() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCountry(Country.CL).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCountry(Country.CL).build(), A_MENU);
         cafe.addIngredientsToInventory(AN_ORDER.ingredientsNeeded());
 
         cafe.updateConfiguration(new CafeConfigurationFixture().withCountry(Country.None).build());
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), THE_MATCHING_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
         assertEquals(new Amount(0), cafe.getCustomerBill(aCustomer.getId()).taxes());
@@ -333,14 +340,14 @@ public class CafeTest {
 
     @Test
     public void givenNewGroupTipRate_whenUpdatingConfiguration_shouldUpdateGroupTipRate() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withGroupTipRate(new TipRate(0.20f)).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withGroupTipRate(new TipRate(0.20f)).build(), A_MENU);
         cafe.addIngredientsToInventory(AN_ORDER.ingredientsNeeded());
 
         cafe.updateConfiguration(new CafeConfigurationFixture().withGroupTipRate(new TipRate(0.15f)).build());
         Customer aCustomer = new CustomerFixture().build();
         cafe.makeReservation(A_RESERVATION_FOR_TWO);
         cafe.checkIn(aCustomer, Optional.of(A_RESERVATION_FOR_TWO.name()));
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), THE_MATCHING_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
         assertNotEquals(new Amount(0), cafe.getCustomerBill(aCustomer.getId()).tip());
@@ -350,7 +357,7 @@ public class CafeTest {
     public void givenValidMenuItemName_whenFindingMenuItemByName_shouldReturnMenuItem() {
         Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new MenuFixture().withItem(A_MENU_ITEM).build());
 
-        MenuItem menuItem = cafe.findMenuItemByName(A_MENU_ITEM.name());
+        Coffee menuItem = cafe.findMenuItemByName(A_MENU_ITEM.name());
 
         assertEquals(A_MENU_ITEM, menuItem);
     }
@@ -373,7 +380,7 @@ public class CafeTest {
 
     @Test
     public void givenDuplicateMenuItemName_whenAddingMenuItem_shouldThrowDuplicateMenuItemNameException() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
         cafe.addMenuItem(A_MENU_ITEM);
 
         assertThrows(DuplicateMenuItemNameException.class, () -> cafe.addMenuItem(A_MENU_ITEM));
@@ -381,9 +388,9 @@ public class CafeTest {
 
     @Test
     public void givenDuplicateMenuItemName_whenAddingMenuItem_shouldNotReplacePreviousItem() {
-        MenuItem menuItem = new MenuItem(new MenuItemName("a name"), new Amount(10), new Recipe(List.of()));
-        MenuItem duplicateMenuItem = new MenuItem(new MenuItemName("a name"), new Amount(20), new Recipe(List.of()));
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Coffee menuItem = new Coffee(new CoffeeName("a name"), new Amount(10), new Recipe(List.of()));
+        Coffee duplicateMenuItem = new Coffee(new CoffeeName("a name"), new Amount(20), new Recipe(List.of()));
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
         cafe.addMenuItem(menuItem);
 
         try {
@@ -400,7 +407,7 @@ public class CafeTest {
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
 
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), THE_MATCHING_PENDING_ORDER);
 
         assertEquals(AN_ORDER, cafe.getOrderByCustomerId(aCustomer.getId()));
     }
@@ -410,9 +417,9 @@ public class CafeTest {
         Cafe cafe = cafeWithEnoughInventory();
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), new PendingOrderFixture().fromOrder(AN_ORDER).build());
 
-        cafe.placeOrder(aCustomer.getId(), ANOTHER_ORDER);
+        cafe.placeOrder(aCustomer.getId(), new PendingOrderFixture().fromOrder(ANOTHER_ORDER).build());
 
         assertEquals(AN_ORDER.addAll(ANOTHER_ORDER), cafe.getOrderByCustomerId(aCustomer.getId()));
     }
@@ -421,7 +428,7 @@ public class CafeTest {
     public void givenNotCheckedInCustomer_whenPlacingOrder_shouldThrowCustomerNotFoundException() {
         Cafe cafe = cafeWithEnoughInventory();
 
-        assertThrows(CustomerNotFoundException.class, () -> cafe.placeOrder(new CustomerId("Invalid"), AN_ORDER));
+        assertThrows(CustomerNotFoundException.class, () -> cafe.placeOrder(new CustomerId("Invalid"), A_PENDING_ORDER));
     }
 
     @Test
@@ -430,7 +437,7 @@ public class CafeTest {
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
 
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), THE_MATCHING_PENDING_ORDER);
 
         assertTrue(cafe.getInventory().getIngredients().values().stream().allMatch(ingredient -> ingredient.quantity().value() == 0));
     }
@@ -440,7 +447,7 @@ public class CafeTest {
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
 
-        assertThrows(InsufficientIngredientsException.class, () -> cafe.placeOrder(aCustomer.getId(), AN_ORDER));
+        assertThrows(InsufficientIngredientsException.class, () -> cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER));
     }
 
     @Test
@@ -450,7 +457,7 @@ public class CafeTest {
         cafe.addIngredientsToInventory(AN_ORDER.ingredientsNeeded());
 
         try {
-            cafe.placeOrder(aCustomer.getId(), AN_ORDER.addAll(AN_ORDER));
+            cafe.placeOrder(aCustomer.getId(), new PendingOrderFixture().fromOrder(AN_ORDER.addAll(AN_ORDER)).build());
         } catch (InsufficientIngredientsException ignored) {
         }
 
@@ -464,7 +471,7 @@ public class CafeTest {
         cafe.addIngredientsToInventory(AN_ORDER.ingredientsNeeded());
 
         try {
-            cafe.placeOrder(aCustomer.getId(), AN_ORDER.addAll(AN_ORDER));
+            cafe.placeOrder(aCustomer.getId(), new PendingOrderFixture().fromOrder(AN_ORDER.addAll(AN_ORDER)).build());
         } catch (InsufficientIngredientsException ignored) {
         }
 
@@ -473,7 +480,7 @@ public class CafeTest {
 
     @Test
     public void givenInvalidCustomerId_whenGettingOrderByCustomerId_shouldThrowCustomerNotFoundException() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
 
         assertThrows(CustomerNotFoundException.class, () -> cafe.getOrderByCustomerId(new CustomerId("Invalid")));
     }
@@ -502,7 +509,7 @@ public class CafeTest {
 
     @Test
     public void givenNonexistentCustomer_whenCheckingOut_shouldThrowCustomerNotFoundException() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
 
         assertThrows(CustomerNotFoundException.class, () -> cafe.checkOut(new CustomerId("Invalid")));
     }
@@ -520,7 +527,7 @@ public class CafeTest {
 
     @Test
     public void givenNonexistentCustomer_whenGettingBill_shouldThrowCustomerNotFoundException() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
 
         assertThrows(CustomerNotFoundException.class, () -> cafe.getCustomerBill(new CustomerId("Invalid")));
     }
@@ -552,7 +559,7 @@ public class CafeTest {
         Cafe cafe = cafeWithEnoughInventory();
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
         Bill bill = cafe.getCustomerBill(aCustomer.getId());
@@ -565,12 +572,12 @@ public class CafeTest {
         Cafe cafe = cafeWithEnoughInventory();
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
         Bill bill = cafe.getCustomerBill(aCustomer.getId());
 
-        double expectedSubtotal = AN_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
+        double expectedSubtotal = THE_MATCHING_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
         assertEquals(expectedSubtotal, bill.subtotal().value());
     }
 
@@ -580,12 +587,12 @@ public class CafeTest {
         cafe.updateConfiguration(new CafeConfigurationFixture().withCountry(Country.CL).build());
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
         Bill bill = cafe.getCustomerBill(aCustomer.getId());
 
-        float expectedSubtotal = (float) AN_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
+        float expectedSubtotal = (float) THE_MATCHING_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
         float taxes = expectedSubtotal * 0.19f;
         float expectedTotal = expectedSubtotal + taxes;
         assertEquals(expectedTotal, bill.total().value());
@@ -597,12 +604,12 @@ public class CafeTest {
         cafe.updateConfiguration(new CafeConfigurationFixture().withCountry(Country.CA).withProvince(Province.QC).build());
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
         Bill bill = cafe.getCustomerBill(aCustomer.getId());
 
-        float subtotal = (float) AN_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
+        float subtotal = (float) THE_MATCHING_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
         assertEquals(new Amount(subtotal * 0.14975f), bill.taxes());
     }
 
@@ -612,12 +619,12 @@ public class CafeTest {
         cafe.updateConfiguration(new CafeConfigurationFixture().withCountry(Country.US).withState(State.FL).build());
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
         Bill bill = cafe.getCustomerBill(aCustomer.getId());
 
-        float subtotal = (float) AN_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
+        float subtotal = (float) THE_MATCHING_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
         assertEquals(new Amount(subtotal * 0.06f), bill.taxes());
     }
 
@@ -627,7 +634,7 @@ public class CafeTest {
         cafe.updateConfiguration(new CafeConfigurationFixture().withGroupTipRate(new TipRate(0.15f)).build());
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
         Bill bill = cafe.getCustomerBill(aCustomer.getId());
@@ -642,12 +649,12 @@ public class CafeTest {
         Customer aCustomer = new CustomerFixture().build();
         cafe.makeReservation(A_RESERVATION_FOR_TWO);
         cafe.checkIn(aCustomer, Optional.of(A_RESERVATION_FOR_TWO.name()));
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
         Bill bill = cafe.getCustomerBill(aCustomer.getId());
 
-        float subtotal = (float) AN_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
+        float subtotal = (float) THE_MATCHING_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
         assertEquals(new Amount(subtotal * 0.15f), bill.tip());
     }
 
@@ -657,18 +664,18 @@ public class CafeTest {
         cafe.updateConfiguration(new CafeConfigurationFixture().withCountry(Country.CL).build());
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
-        cafe.placeOrder(aCustomer.getId(), AN_ORDER);
+        cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
         Bill bill = cafe.getCustomerBill(aCustomer.getId());
 
-        float subtotal = (float) AN_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
+        float subtotal = (float) THE_MATCHING_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
         assertEquals(new Amount(subtotal * 0.19f), bill.taxes());
     }
 
     @Test
     public void whenAddingIngredients_shouldBeAddedToInventory() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
         Ingredient anIngredient = new Ingredient(IngredientType.Chocolate, new Quantity(10));
 
         cafe.addIngredientsToInventory(List.of(anIngredient));
@@ -678,7 +685,7 @@ public class CafeTest {
 
     @Test
     public void whenClosingCafe_shouldClearAllSeats() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), new Menu());
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
         cafe.makeReservation(A_RESERVATION_FOR_TWO);
@@ -692,7 +699,7 @@ public class CafeTest {
 
     @Test
     public void whenClosingCafe_shouldClearAllCustomers() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), new Menu());
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
 
@@ -703,7 +710,7 @@ public class CafeTest {
 
     @Test
     public void whenClosingCafe_shouldClearAllReservations() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().withCubeSize(TWO_SEATS_PER_CUBE).build(), new Menu());
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
         cafe.makeReservation(A_RESERVATION_FOR_TWO);
@@ -718,7 +725,7 @@ public class CafeTest {
         Cafe cafe = cafeWithEnoughInventory();
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
-        cafe.placeOrder(aCustomer.getId(), new OrderFixture().build());
+        cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
 
         cafe.close();
         cafe.checkIn(new CustomerFixture().withCustomerId(aCustomer.getId()).build(), Optional.empty());
@@ -740,7 +747,7 @@ public class CafeTest {
         Cafe cafe = cafeWithEnoughInventory();
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
-        cafe.placeOrder(aCustomer.getId(), new OrderFixture().build());
+        cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
         cafe.close();
@@ -750,7 +757,9 @@ public class CafeTest {
     }
 
     private Cafe cafeWithEnoughInventory() {
-        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
+        Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), new Menu());
+        cafe.addMenuItem(new CoffeeFixture().withAmericano().build());
+        cafe.addMenuItem(new CoffeeFixture().withEspresso().build());
         cafe.addIngredientsToInventory(
             List.of(new Ingredient(IngredientType.Milk, new Quantity(1000)), new Ingredient(IngredientType.Chocolate, new Quantity(1000)),
                 new Ingredient(IngredientType.Water, new Quantity(1000)), new Ingredient(IngredientType.Espresso, new Quantity(1000))));

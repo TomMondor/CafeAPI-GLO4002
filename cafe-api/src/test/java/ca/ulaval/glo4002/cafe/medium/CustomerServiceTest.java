@@ -1,6 +1,5 @@
 package ca.ulaval.glo4002.cafe.medium;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +15,9 @@ import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerFactory;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerId;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerName;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
+import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.PendingOrder;
+import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
+import ca.ulaval.glo4002.cafe.fixture.CoffeeFixture;
 import ca.ulaval.glo4002.cafe.fixture.OrderFixture;
 import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
@@ -36,7 +38,9 @@ public class CustomerServiceTest {
     private static final String A_CUSTOMER_NAME = "Joe";
     private static final CheckInCustomerParams CHECK_IN_CUSTOMER_PARAMS = new CheckInCustomerParams(A_CUSTOMER_ID.value(), A_CUSTOMER_NAME, null);
     private static final CheckOutCustomerParams CHECK_OUT_CUSTOMER_PARAMS = new CheckOutCustomerParams(A_CUSTOMER_ID.value());
-    private static final CustomerOrderParams CUSTOMER_ORDER_PARAMS = new CustomerOrderParams(A_CUSTOMER_ID, new OrderFixture().build());
+    private static final CustomerOrderParams CUSTOMER_ORDER_PARAMS =
+        new CustomerOrderParams(A_CUSTOMER_ID, new PendingOrder(List.of(new CoffeeName("Americano"))));
+    private static final Order CUSTOMER_ORDER = new Order(List.of(new CoffeeFixture().withAmericano().build()));
     private static final IngredientsParams INGREDIENT_PARAMS = new IngredientsParams(100, 100, 100, 100);
 
     CustomerService customerService;
@@ -48,7 +52,7 @@ public class CustomerServiceTest {
         cafeRepository = new InMemoryCafeRepository();
         customerService = new CustomerService(cafeRepository, new CustomerFactory());
         cafeService = new CafeService(cafeRepository);
-        Cafe cafe = new CafeFactory().createCafe(List.of());
+        Cafe cafe = new CafeFactory().createCafe(List.of(new CoffeeFixture().withAmericano().build()));
         cafeRepository.saveOrUpdate(cafe);
     }
 
@@ -101,7 +105,7 @@ public class CustomerServiceTest {
 
     @Test
     public void givenSavedCustomerWithOrder_whenGettingOrder_shouldReturnValidOrderDTO() {
-        OrderDTO expectedOrderDTO = new OrderDTO(CUSTOMER_ORDER_PARAMS.order().items());
+        OrderDTO expectedOrderDTO = new OrderDTO(CUSTOMER_ORDER.items());
         customerService.checkIn(CHECK_IN_CUSTOMER_PARAMS);
         cafeService.addIngredientsToInventory(INGREDIENT_PARAMS);
         customerService.placeOrder(CUSTOMER_ORDER_PARAMS);
@@ -113,7 +117,7 @@ public class CustomerServiceTest {
 
     @Test
     public void givenSavedBill_whenGettingCustomerBill_shouldReturnValidBillDTO() {
-        BillDTO expectedBillDTO = new BillDTO(new LinkedList<>(CUSTOMER_ORDER_PARAMS.order().items()), new Amount(0),
+        BillDTO expectedBillDTO = new BillDTO(CUSTOMER_ORDER.items(), new Amount(0),
             new Amount(2.25f), new Amount(0), new Amount(2.25f));
         customerService.checkIn(CHECK_IN_CUSTOMER_PARAMS);
         cafeService.addIngredientsToInventory(INGREDIENT_PARAMS);

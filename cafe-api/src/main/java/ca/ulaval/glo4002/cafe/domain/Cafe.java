@@ -21,9 +21,10 @@ import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Customer;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerId;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.bill.Bill;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
+import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.PendingOrder;
+import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
+import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
 import ca.ulaval.glo4002.cafe.domain.menu.Menu;
-import ca.ulaval.glo4002.cafe.domain.menu.MenuItem;
-import ca.ulaval.glo4002.cafe.domain.menu.MenuItemName;
 import ca.ulaval.glo4002.cafe.domain.reservation.GroupName;
 import ca.ulaval.glo4002.cafe.domain.reservation.Reservation;
 import ca.ulaval.glo4002.cafe.domain.reservation.ReservationStrategyFactory;
@@ -87,11 +88,11 @@ public class Cafe {
         return layout.getSeatByCustomerId(customerId);
     }
 
-    public void addMenuItem(MenuItem newMenuItem) {
+    public void addMenuItem(Coffee newMenuItem) {
         menu.addMenuItem(newMenuItem);
     }
 
-    public MenuItem findMenuItemByName(MenuItemName itemName) {
+    public Coffee findMenuItemByName(CoffeeName itemName) {
         return menu.findMenuItemByName(itemName);
     }
 
@@ -117,8 +118,9 @@ public class Cafe {
         bills.put(customerId, bill);
     }
 
-    public void placeOrder(CustomerId customerId, Order order) {
-        layout.placeOrder(customerId, order, inventory);
+    public void placeOrder(CustomerId customerId, PendingOrder order) {
+        Order approvedOrder = menu.approveOrder(order);
+        layout.placeOrder(customerId, approvedOrder, inventory);
     }
 
     public void addIngredientsToInventory(List<Ingredient> ingredients) {

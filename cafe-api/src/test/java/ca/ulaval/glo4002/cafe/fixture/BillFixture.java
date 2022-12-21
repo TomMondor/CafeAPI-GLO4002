@@ -4,13 +4,16 @@ import java.util.List;
 
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Amount;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.bill.Bill;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Coffee;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.CoffeeType;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
+import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Recipe;
+import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
+import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
 
 public class BillFixture {
-    private Order coffeeOrder =
-        new Order(List.of(new Coffee(CoffeeType.Americano), new Coffee(CoffeeType.Espresso), new Coffee(CoffeeType.Latte)));
+    private Order coffeeOrder = new Order(List.of(
+        new Coffee(new CoffeeName("Americano"), new Amount(2), new Recipe(List.of())),
+        new Coffee(new CoffeeName("Espresso"), new Amount(3), new Recipe(List.of())),
+        new Coffee(new CoffeeName("Latte"), new Amount(2.5f), new Recipe(List.of()))));
     private Amount subtotal = new Amount(10.0f);
     private Amount taxes = new Amount(1.0f);
     private Amount tip = new Amount(2.0f);

@@ -8,17 +8,19 @@ import org.junit.jupiter.api.Test;
 import ca.ulaval.glo4002.cafe.api.customer.assembler.BillResponseAssembler;
 import ca.ulaval.glo4002.cafe.api.customer.response.BillResponse;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Amount;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Coffee;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.CoffeeType;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
 import ca.ulaval.glo4002.cafe.fixture.BillFixture;
+import ca.ulaval.glo4002.cafe.fixture.CoffeeFixture;
 import ca.ulaval.glo4002.cafe.service.customer.dto.BillDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BillResponseAssemblerTest {
-    private static final Order A_COFFEE_ORDER = new Order(
-        List.of(new Coffee(CoffeeType.Espresso), new Coffee(CoffeeType.Espresso), new Coffee(CoffeeType.Latte), new Coffee(CoffeeType.Americano)));
+    private static final Order A_COFFEE_ORDER = new Order(List.of(
+        new CoffeeFixture().withEspresso().build(),
+        new CoffeeFixture().withEspresso().build(),
+        new CoffeeFixture().withLatte().build(),
+        new CoffeeFixture().withAmericano().build()));
 
     private BillResponseAssembler billResponseAssembler;
 
@@ -33,7 +35,7 @@ public class BillResponseAssemblerTest {
 
         BillResponse actualBillResponse = billResponseAssembler.toBillResponse(billDTO);
 
-        assertEquals(actualBillResponse.orders(), A_COFFEE_ORDER.items().stream().map(coffee -> coffee.coffeeType().toString()).toList());
+        assertEquals(actualBillResponse.orders(), A_COFFEE_ORDER.items().stream().map(coffee -> coffee.name().value()).toList());
     }
 
     @Test
