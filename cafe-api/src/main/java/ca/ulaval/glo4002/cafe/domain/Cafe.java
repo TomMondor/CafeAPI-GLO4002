@@ -23,7 +23,6 @@ import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.bill.Bill;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.PendingOrder;
 import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
-import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
 import ca.ulaval.glo4002.cafe.domain.menu.Menu;
 import ca.ulaval.glo4002.cafe.domain.reservation.GroupName;
 import ca.ulaval.glo4002.cafe.domain.reservation.Reservation;
@@ -92,10 +91,6 @@ public class Cafe {
         menu.addMenuItem(newMenuItem);
     }
 
-    public Coffee findMenuItemByName(CoffeeName itemName) {
-        return menu.findMenuItemByName(itemName);
-    }
-
     public Order getOrderByCustomerId(CustomerId customerId) {
         return layout.getOrderByCustomerId(customerId);
     }
@@ -108,9 +103,10 @@ public class Cafe {
 
     public void close() {
         layout.reset(cubeSize);
-        clearReservations();
-        clearBills();
-        clearInventory();
+        reservations.clear();
+        bills.clear();
+        inventory.clear();
+        menu.clearCustomMenuItems();
     }
 
     public void checkOut(CustomerId customerId) {
@@ -136,14 +132,6 @@ public class Cafe {
             }
         }
         return bills.get(customerId);
-    }
-
-    private void clearInventory() {
-        inventory.clear();
-    }
-
-    private void clearBills() {
-        bills.clear();
     }
 
     private void checkIfCustomerAlreadyVisitedToday(CustomerId customerId) {
@@ -174,9 +162,5 @@ public class Cafe {
         if (reservations.stream().map(Reservation::name).toList().contains(name)) {
             throw new DuplicateGroupNameException();
         }
-    }
-
-    private void clearReservations() {
-        reservations.clear();
     }
 }

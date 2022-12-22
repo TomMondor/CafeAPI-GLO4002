@@ -23,7 +23,7 @@ public class CafeFixture {
     private CubeSize cubeSize = new CubeSize(4);
     private TipRate groupTipRate = new TipRate(0.05f);
     private Location location = new Location(Country.CA, Optional.of(Province.AB), Optional.empty());
-    private Menu menu = new Menu();
+    private Menu menu = new Menu(List.of());
 
     public CafeFixture withName(CafeName name) {
         this.name = name;

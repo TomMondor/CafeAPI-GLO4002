@@ -10,10 +10,13 @@ import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.domain.CafeName;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerNoBillException;
+import ca.ulaval.glo4002.cafe.domain.exception.InvalidMenuOrderException;
 import ca.ulaval.glo4002.cafe.domain.inventory.IngredientType;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Customer;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.PendingOrder;
+import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
 import ca.ulaval.glo4002.cafe.domain.reservation.Reservation;
+import ca.ulaval.glo4002.cafe.fixture.CoffeeFixture;
 import ca.ulaval.glo4002.cafe.fixture.CustomerFixture;
 import ca.ulaval.glo4002.cafe.fixture.ReservationFixture;
 import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
@@ -30,6 +33,7 @@ public class CafeServiceTest {
     private static final CafeName NEW_CAFE_NAME = new CafeName("Les 4-Ogres");
     private static final Customer A_CUSTOMER = new CustomerFixture().build();
     private static final Reservation A_RESERVATION = new ReservationFixture().build();
+    private static final CoffeeName A_COFFEE_NAME = new CoffeeName("coffee name");
     private static final IngredientsParams INGREDIENT_PARAMS = new IngredientsParams(25, 20, 15, 10);
     private static final CoffeeParams A_COFFEE_PARAMS = new CoffeeParams("coffee name", 3.25f, INGREDIENT_PARAMS);
     private static final ConfigurationParams CONFIGURATION_PARAMS = new ConfigurationParams(5, NEW_CAFE_NAME.value(), "Default", "CA",
@@ -74,6 +78,17 @@ public class CafeServiceTest {
 
         cafe = cafeRepository.get();
         assertThrows(CustomerNoBillException.class, () -> cafe.getCustomerBill(A_CUSTOMER.getId()));
+    }
+
+    @Test
+    public void givenCustomMenuItems_whenClosing_shouldClearCustomMenuItems() {
+        cafe.checkIn(A_CUSTOMER, Optional.empty());
+        cafe.addMenuItem(new CoffeeFixture().withName(A_COFFEE_NAME).build());
+
+        cafeService.closeCafe();
+
+        assertThrows(InvalidMenuOrderException.class,
+            () -> cafe.placeOrder(A_CUSTOMER.getId(), new PendingOrder(List.of(A_COFFEE_NAME))));
     }
 
     @Test
