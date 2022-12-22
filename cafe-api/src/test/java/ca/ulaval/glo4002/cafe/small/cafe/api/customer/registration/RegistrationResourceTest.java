@@ -12,12 +12,11 @@ import ca.ulaval.glo4002.cafe.api.customer.registration.request.ReservationReque
 import ca.ulaval.glo4002.cafe.fixture.request.CheckInRequestFixture;
 import ca.ulaval.glo4002.cafe.fixture.request.CheckOutRequestFixture;
 import ca.ulaval.glo4002.cafe.fixture.request.ReservationRequestFixture;
-import ca.ulaval.glo4002.cafe.service.customer.CustomerService;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckInCustomerParams;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckOutCustomerParams;
-import ca.ulaval.glo4002.cafe.service.reservation.ReservationService;
-import ca.ulaval.glo4002.cafe.service.reservation.dto.ReservationDTO;
-import ca.ulaval.glo4002.cafe.service.reservation.parameter.ReservationRequestParams;
+import ca.ulaval.glo4002.cafe.service.registration.RegistrationService;
+import ca.ulaval.glo4002.cafe.service.registration.dto.ReservationDTO;
+import ca.ulaval.glo4002.cafe.service.registration.parameter.ReservationRequestParams;
 
 import jakarta.ws.rs.core.Response;
 
@@ -33,14 +32,12 @@ public class RegistrationResourceTest {
     private static final ReservationDTO A_RESERVATION_DTO = new ReservationDTO(List.of());
 
     private RegistrationResource registrationResource;
-    private ReservationService reservationService;
-    private CustomerService customerService;
+    private RegistrationService reservationService;
 
     @BeforeEach
     public void createReservationResource() {
-        reservationService = mock(ReservationService.class);
-        customerService = mock(CustomerService.class);
-        registrationResource = new RegistrationResource(reservationService, customerService);
+        reservationService = mock(RegistrationService.class);
+        registrationResource = new RegistrationResource(reservationService);
     }
 
     @Test
@@ -97,7 +94,7 @@ public class RegistrationResourceTest {
 
         registrationResource.checkIn(checkInRequest);
 
-        verify(customerService).checkIn(checkInCustomerParams);
+        verify(reservationService).checkIn(checkInCustomerParams);
     }
 
     @Test
@@ -135,7 +132,7 @@ public class RegistrationResourceTest {
 
         registrationResource.checkOut(checkOutRequest);
 
-        verify(customerService).checkOut(checkOutCustomerParams);
+        verify(reservationService).checkOut(checkOutCustomerParams);
     }
 
     @Test

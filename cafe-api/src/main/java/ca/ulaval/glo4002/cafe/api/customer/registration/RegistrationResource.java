@@ -8,11 +8,10 @@ import ca.ulaval.glo4002.cafe.api.customer.registration.request.CheckInRequest;
 import ca.ulaval.glo4002.cafe.api.customer.registration.request.CheckOutRequest;
 import ca.ulaval.glo4002.cafe.api.customer.registration.request.ReservationRequest;
 import ca.ulaval.glo4002.cafe.api.customer.registration.response.ReservationResponse;
-import ca.ulaval.glo4002.cafe.service.customer.CustomerService;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckInCustomerParams;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckOutCustomerParams;
-import ca.ulaval.glo4002.cafe.service.reservation.ReservationService;
-import ca.ulaval.glo4002.cafe.service.reservation.parameter.ReservationRequestParams;
+import ca.ulaval.glo4002.cafe.service.registration.RegistrationService;
+import ca.ulaval.glo4002.cafe.service.registration.parameter.ReservationRequestParams;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.GET;
@@ -25,13 +24,11 @@ import jakarta.ws.rs.core.Response;
 @Path("")
 @Produces(MediaType.APPLICATION_JSON)
 public class RegistrationResource {
-    private final ReservationService reservationService;
+    private final RegistrationService reservationService;
     private final ReservationResponseAssembler reservationResponseAssembler = new ReservationResponseAssembler();
-    private final CustomerService customersService;
 
-    public RegistrationResource(ReservationService reservationService, CustomerService customersService) {
+    public RegistrationResource(RegistrationService reservationService) {
         this.reservationService = reservationService;
-        this.customersService = customersService;
     }
 
     @POST
@@ -54,7 +51,7 @@ public class RegistrationResource {
     public Response checkIn(@Valid CheckInRequest checkInRequest) {
         CheckInCustomerParams checkInCustomerParams =
             CheckInCustomerParams.from(checkInRequest.customer_id, checkInRequest.customer_name, checkInRequest.group_name);
-        customersService.checkIn(checkInCustomerParams);
+        reservationService.checkIn(checkInCustomerParams);
         return Response.created(URI.create("/customers/" + checkInCustomerParams.customerId().value())).build();
     }
 
@@ -62,7 +59,7 @@ public class RegistrationResource {
     @Path("/checkout")
     public Response checkOut(@Valid CheckOutRequest checkOutRequest) {
         CheckOutCustomerParams checkOutCustomerParams = CheckOutCustomerParams.from(checkOutRequest.customer_id);
-        customersService.checkOut(checkOutCustomerParams);
+        reservationService.checkOut(checkOutCustomerParams);
         return Response.created(URI.create("/customers/" + checkOutCustomerParams.customerId().value() + "/bill")).build();
     }
 }

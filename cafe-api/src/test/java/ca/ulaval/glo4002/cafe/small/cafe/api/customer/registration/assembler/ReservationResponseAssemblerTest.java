@@ -13,7 +13,7 @@ import ca.ulaval.glo4002.cafe.domain.reservation.Reservation;
 import ca.ulaval.glo4002.cafe.fixture.ReservationDTOFixture;
 import ca.ulaval.glo4002.cafe.fixture.ReservationFixture;
 import ca.ulaval.glo4002.cafe.fixture.ReservationResponseFixture;
-import ca.ulaval.glo4002.cafe.service.reservation.dto.ReservationDTO;
+import ca.ulaval.glo4002.cafe.service.registration.dto.ReservationDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

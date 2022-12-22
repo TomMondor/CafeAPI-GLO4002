@@ -30,7 +30,7 @@ import ca.ulaval.glo4002.cafe.service.CafeService;
 import ca.ulaval.glo4002.cafe.service.customer.CustomerService;
 import ca.ulaval.glo4002.cafe.service.inventory.InventoryService;
 import ca.ulaval.glo4002.cafe.service.layout.LayoutService;
-import ca.ulaval.glo4002.cafe.service.reservation.ReservationService;
+import ca.ulaval.glo4002.cafe.service.registration.RegistrationService;
 
 public class ProductionApplicationContext implements ApplicationContext {
     private static final int PORT = 8181;
@@ -42,8 +42,8 @@ public class ProductionApplicationContext implements ApplicationContext {
     public ResourceConfig initializeResourceConfig() {
         CafeRepository cafeRepository = new InMemoryCafeRepository();
 
-        ReservationService groupService = new ReservationService(cafeRepository, new ReservationFactory());
-        CustomerService customersService = new CustomerService(cafeRepository, new CustomerFactory());
+        RegistrationService groupService = new RegistrationService(cafeRepository, new ReservationFactory(), new CustomerFactory());
+        CustomerService customersService = new CustomerService(cafeRepository);
         CafeService cafeService = new CafeService(cafeRepository);
         LayoutService layoutService = new LayoutService(cafeRepository);
         InventoryService inventoryService = new InventoryService(cafeRepository);
@@ -59,14 +59,14 @@ public class ProductionApplicationContext implements ApplicationContext {
         cafeRepository.saveOrUpdate(cafe);
     }
 
-    private ResourceConfig createResourceConfig(CafeService cafeService, ReservationService reservationService, CustomerService customersService,
+    private ResourceConfig createResourceConfig(CafeService cafeService, RegistrationService reservationService, CustomerService customersService,
                                                 LayoutService layoutService, InventoryService inventoryService) {
         return new ResourceConfig().packages("ca.ulaval.glo4002.cafe").property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true)
             .register(new OperationResource(cafeService))
             .register(new InventoryResource(inventoryService))
             .register(new LayoutResource(layoutService))
             .register(new CustomerActionResource(customersService))
-            .register(new RegistrationResource(reservationService, customersService))
+            .register(new RegistrationResource(reservationService))
             .register(new CafeExceptionMapper())
             .register(new CatchallExceptionMapper())
             .register(new ConstraintViolationExceptionMapper());

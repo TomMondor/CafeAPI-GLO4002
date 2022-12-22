@@ -9,7 +9,6 @@ import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.Seat;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.SeatNumber;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Customer;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerFactory;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerId;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerName;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.bill.Bill;
@@ -27,8 +26,6 @@ import ca.ulaval.glo4002.cafe.service.customer.CustomerService;
 import ca.ulaval.glo4002.cafe.service.customer.dto.BillDTO;
 import ca.ulaval.glo4002.cafe.service.customer.dto.CustomerDTO;
 import ca.ulaval.glo4002.cafe.service.customer.dto.OrderDTO;
-import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckInCustomerParams;
-import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckOutCustomerParams;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CustomerOrderParams;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,8 +34,6 @@ import static org.mockito.Mockito.*;
 public class CustomerServiceTest {
     private static final CustomerName CUSTOMER_NAME = new CustomerName("Bob Bisonette");
     private static final CustomerId CUSTOMER_ID = new CustomerId("ABC273031");
-    private static final CheckInCustomerParams CHECK_IN_CUSTOMER_PARAMS_NO_GROUP = new CheckInCustomerParams(CUSTOMER_ID.value(), CUSTOMER_NAME.value(), null);
-    private static final CheckOutCustomerParams CHECKOUT_CUSTOMER_PARAMS = new CheckOutCustomerParams(CUSTOMER_ID.value());
     private static final Customer CUSTOMER = new CustomerFixture().withCustomerId(CUSTOMER_ID).withCustomerName(CUSTOMER_NAME).build();
     private static final Seat SEAT_WITH_CUSTOMER = new SeatFixture().withSeatNumber(new SeatNumber(1)).withCustomer(CUSTOMER).build();
     private static final Coffee AN_AMERICANO_COFFEE = new CoffeeFixture().withAmericano().build();
@@ -49,7 +44,6 @@ public class CustomerServiceTest {
     private static final List<String> SOME_COFFEE_NAMES = List.of("Americano", "Dark Roast");
 
     private CustomerService customersService;
-    private CustomerFactory customerFactory;
 
     private CafeRepository cafeRepository;
     private Cafe mockCafe;
@@ -57,8 +51,7 @@ public class CustomerServiceTest {
     @BeforeEach
     public void createCustomersService() {
         cafeRepository = mock(CafeRepository.class);
-        customerFactory = mock(CustomerFactory.class);
-        customersService = new CustomerService(cafeRepository, customerFactory);
+        customersService = new CustomerService(cafeRepository);
 
         mockCafe = mock(Cafe.class);
         when(cafeRepository.get()).thenReturn(mockCafe);
@@ -93,42 +86,6 @@ public class CustomerServiceTest {
     }
 
     @Test
-    public void whenCheckingInCustomer_shouldGetCafe() {
-        when(customerFactory.createCustomer(CUSTOMER_ID, CUSTOMER_NAME)).thenReturn(CUSTOMER);
-
-        customersService.checkIn(CHECK_IN_CUSTOMER_PARAMS_NO_GROUP);
-
-        verify(cafeRepository).get();
-    }
-
-    @Test
-    public void whenCheckingInCustomer_shouldCreateNewCustomer() {
-        when(customerFactory.createCustomer(CUSTOMER_ID, CUSTOMER_NAME)).thenReturn(CUSTOMER);
-
-        customersService.checkIn(CHECK_IN_CUSTOMER_PARAMS_NO_GROUP);
-
-        verify(customerFactory).createCustomer(CUSTOMER_ID, CUSTOMER_NAME);
-    }
-
-    @Test
-    public void whenCheckingInCustomer_shouldCheckInInCafe() {
-        when(customerFactory.createCustomer(CUSTOMER_ID, CUSTOMER_NAME)).thenReturn(CUSTOMER);
-
-        customersService.checkIn(CHECK_IN_CUSTOMER_PARAMS_NO_GROUP);
-
-        verify(mockCafe).checkIn(CUSTOMER, CHECK_IN_CUSTOMER_PARAMS_NO_GROUP.groupName());
-    }
-
-    @Test
-    public void whenCheckingInCustomer_shouldUpdateCafe() {
-        when(customerFactory.createCustomer(CUSTOMER_ID, CUSTOMER_NAME)).thenReturn(CUSTOMER);
-
-        customersService.checkIn(CHECK_IN_CUSTOMER_PARAMS_NO_GROUP);
-
-        verify(cafeRepository).saveOrUpdate(mockCafe);
-    }
-
-    @Test
     public void whenGettingOrders_shouldGetCafe() {
         when(mockCafe.getOrderByCustomerId(CUSTOMER_ID)).thenReturn(A_ORDER);
 
@@ -155,27 +112,6 @@ public class CustomerServiceTest {
 
         assertEquals(expectedOrders.items().get(0), actualOrderDTO.coffees().get(0));
         assertEquals(expectedOrders.items().get(1), actualOrderDTO.coffees().get(1));
-    }
-
-    @Test
-    public void whenCheckingOut_shouldGetCafe() {
-        customersService.checkOut(CHECKOUT_CUSTOMER_PARAMS);
-
-        verify(cafeRepository).get();
-    }
-
-    @Test
-    public void whenCheckingOut_shouldCheckOutWithCustomerId() {
-        customersService.checkOut(CHECKOUT_CUSTOMER_PARAMS);
-
-        verify(mockCafe).checkOut(CUSTOMER_ID);
-    }
-
-    @Test
-    public void whenCheckingOut_shouldUpdateCafe() {
-        customersService.checkOut(CHECKOUT_CUSTOMER_PARAMS);
-
-        verify(cafeRepository).saveOrUpdate(mockCafe);
     }
 
     @Test
