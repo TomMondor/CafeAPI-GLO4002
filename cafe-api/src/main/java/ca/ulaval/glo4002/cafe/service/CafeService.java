@@ -6,7 +6,6 @@ import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeConfiguration;
 import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
 import ca.ulaval.glo4002.cafe.service.dto.InventoryDTO;
-import ca.ulaval.glo4002.cafe.service.dto.LayoutDTO;
 import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
@@ -16,11 +15,6 @@ public class CafeService {
 
     public CafeService(CafeRepository cafeRepository) {
         this.cafeRepository = cafeRepository;
-    }
-
-    public LayoutDTO getLayout() {
-        Cafe cafe = cafeRepository.get();
-        return LayoutDTO.fromCafe(cafe);
     }
 
     public void updateConfiguration(ConfigurationParams configurationParams) {

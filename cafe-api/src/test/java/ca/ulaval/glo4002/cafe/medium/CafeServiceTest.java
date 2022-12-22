@@ -23,6 +23,7 @@ import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeService;
 import ca.ulaval.glo4002.cafe.service.dto.InventoryDTO;
+import ca.ulaval.glo4002.cafe.service.layout.LayoutService;
 import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
@@ -40,12 +41,14 @@ public class CafeServiceTest {
         "QC", "", 5);
 
     private CafeService cafeService;
+    private LayoutService layoutService;
     private Cafe cafe;
     private CafeRepository cafeRepository;
 
     @BeforeEach
     public void instantiateAttributes() {
         cafeRepository = new InMemoryCafeRepository();
+        layoutService = new LayoutService(cafeRepository);
         cafeService = new CafeService(cafeRepository);
         cafe = new CafeFactory().createCafe(List.of());
         cafeRepository.saveOrUpdate(cafe);
@@ -55,7 +58,7 @@ public class CafeServiceTest {
     public void whenUpdatingConfiguration_shouldUpdateConfiguration() {
         cafeService.updateConfiguration(CONFIGURATION_PARAMS);
 
-        assertEquals(NEW_CAFE_NAME, cafeService.getLayout().name());
+        assertEquals(NEW_CAFE_NAME, layoutService.getLayout().name());
     }
 
     @Test

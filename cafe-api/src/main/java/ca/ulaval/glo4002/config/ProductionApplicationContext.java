@@ -28,6 +28,7 @@ import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeService;
 import ca.ulaval.glo4002.cafe.service.customer.CustomerService;
+import ca.ulaval.glo4002.cafe.service.layout.LayoutService;
 import ca.ulaval.glo4002.cafe.service.reservation.ReservationService;
 
 public class ProductionApplicationContext implements ApplicationContext {
@@ -43,10 +44,11 @@ public class ProductionApplicationContext implements ApplicationContext {
         ReservationService groupService = new ReservationService(cafeRepository, new ReservationFactory());
         CustomerService customersService = new CustomerService(cafeRepository, new CustomerFactory());
         CafeService cafeService = new CafeService(cafeRepository);
+        LayoutService layoutService = new LayoutService(cafeRepository);
 
         initializeCafe(cafeRepository);
 
-        return createResourceConfig(cafeService, groupService, customersService);
+        return createResourceConfig(cafeService, groupService, customersService, layoutService);
     }
 
     private void initializeCafe(CafeRepository cafeRepository) {
@@ -55,11 +57,12 @@ public class ProductionApplicationContext implements ApplicationContext {
         cafeRepository.saveOrUpdate(cafe);
     }
 
-    private ResourceConfig createResourceConfig(CafeService cafeService, ReservationService reservationService, CustomerService customersService) {
+    private ResourceConfig createResourceConfig(CafeService cafeService, ReservationService reservationService,
+                                                CustomerService customersService, LayoutService layoutService) {
         return new ResourceConfig().packages("ca.ulaval.glo4002.cafe").property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true)
             .register(new OperationResource(cafeService))
             .register(new InventoryResource(cafeService))
-            .register(new LayoutResource(cafeService))
+            .register(new LayoutResource(layoutService))
             .register(new CustomerActionResource(customersService))
             .register(new RegistrationResource(reservationService, customersService))
             .register(new CafeExceptionMapper())

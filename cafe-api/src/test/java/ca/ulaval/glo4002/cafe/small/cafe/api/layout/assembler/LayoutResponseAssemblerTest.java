@@ -8,7 +8,7 @@ import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.fixture.CafeFixture;
 import ca.ulaval.glo4002.cafe.fixture.CubeResponseFixture;
 import ca.ulaval.glo4002.cafe.fixture.LayoutResponseFixture;
-import ca.ulaval.glo4002.cafe.service.dto.LayoutDTO;
+import ca.ulaval.glo4002.cafe.service.layout.dto.LayoutDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

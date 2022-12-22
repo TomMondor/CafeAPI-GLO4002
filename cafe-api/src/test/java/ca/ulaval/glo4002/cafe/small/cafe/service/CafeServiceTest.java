@@ -14,7 +14,6 @@ import ca.ulaval.glo4002.cafe.fixture.CafeFixture;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeService;
 import ca.ulaval.glo4002.cafe.service.dto.InventoryDTO;
-import ca.ulaval.glo4002.cafe.service.dto.LayoutDTO;
 import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
@@ -34,25 +33,6 @@ public class CafeServiceTest {
     public void createCafeService() {
         cafeRepository = mock(CafeRepository.class);
         cafeService = new CafeService(cafeRepository);
-    }
-
-    @Test
-    public void whenGettingLayout_shouldGetCafe() {
-        when(cafeRepository.get()).thenReturn(A_CAFE);
-
-        cafeService.getLayout();
-
-        verify(cafeRepository).get();
-    }
-
-    @Test
-    public void whenGettingLayout_shouldReturnLayoutDTO() {
-        when(cafeRepository.get()).thenReturn(A_CAFE);
-        LayoutDTO expectedLayoutDTO = new LayoutDTO(A_CAFE.getName(), A_CAFE.getLayout().getCubes());
-
-        LayoutDTO actualLayoutDTO = cafeService.getLayout();
-
-        assertEquals(expectedLayoutDTO, actualLayoutDTO);
     }
 
     @Test

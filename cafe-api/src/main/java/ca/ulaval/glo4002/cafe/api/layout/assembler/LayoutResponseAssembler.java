@@ -5,7 +5,7 @@ import java.util.List;
 import ca.ulaval.glo4002.cafe.api.layout.response.CubeResponse;
 import ca.ulaval.glo4002.cafe.api.layout.response.LayoutResponse;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.Cube;
-import ca.ulaval.glo4002.cafe.service.dto.LayoutDTO;
+import ca.ulaval.glo4002.cafe.service.layout.dto.LayoutDTO;
 
 public class LayoutResponseAssembler {
 
