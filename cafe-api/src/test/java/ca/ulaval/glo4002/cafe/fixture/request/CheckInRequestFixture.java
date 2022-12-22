@@ -1,6 +1,6 @@
 package ca.ulaval.glo4002.cafe.fixture.request;
 
-import ca.ulaval.glo4002.cafe.api.request.CheckInRequest;
+import ca.ulaval.glo4002.cafe.api.customer.registration.request.CheckInRequest;
 
 public class CheckInRequestFixture {
     private String customerId = "SOME_ID";

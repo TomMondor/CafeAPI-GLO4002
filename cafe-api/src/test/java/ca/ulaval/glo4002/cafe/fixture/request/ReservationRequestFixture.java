@@ -1,6 +1,6 @@
 package ca.ulaval.glo4002.cafe.fixture.request;
 
-import ca.ulaval.glo4002.cafe.api.reservation.request.ReservationRequest;
+import ca.ulaval.glo4002.cafe.api.customer.registration.request.ReservationRequest;
 
 public class ReservationRequestFixture {
     private String groupName = "value";

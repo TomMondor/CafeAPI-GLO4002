@@ -1,6 +1,6 @@
 package ca.ulaval.glo4002.cafe.fixture.request;
 
-import ca.ulaval.glo4002.cafe.api.request.ConfigurationRequest;
+import ca.ulaval.glo4002.cafe.api.operation.request.ConfigurationRequest;
 
 public class ConfigurationRequestFixture {
     public String group_reservation_method = "Default";

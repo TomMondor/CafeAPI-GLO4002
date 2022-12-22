@@ -1,6 +1,6 @@
 package ca.ulaval.glo4002.cafe.fixture;
 
-import ca.ulaval.glo4002.cafe.api.reservation.response.ReservationResponse;
+import ca.ulaval.glo4002.cafe.api.customer.registration.response.ReservationResponse;
 
 public class ReservationResponseFixture {
     private String group_name = "Wolfpack";

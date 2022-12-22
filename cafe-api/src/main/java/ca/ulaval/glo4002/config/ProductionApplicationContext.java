@@ -5,12 +5,14 @@ import java.util.List;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 
-import ca.ulaval.glo4002.cafe.api.CafeResource;
-import ca.ulaval.glo4002.cafe.api.customer.CustomerResource;
+import ca.ulaval.glo4002.cafe.api.customer.customerAction.CustomerActionResource;
+import ca.ulaval.glo4002.cafe.api.customer.registration.RegistrationResource;
 import ca.ulaval.glo4002.cafe.api.exception.mapper.CafeExceptionMapper;
 import ca.ulaval.glo4002.cafe.api.exception.mapper.CatchallExceptionMapper;
 import ca.ulaval.glo4002.cafe.api.exception.mapper.ConstraintViolationExceptionMapper;
-import ca.ulaval.glo4002.cafe.api.reservation.ReservationResource;
+import ca.ulaval.glo4002.cafe.api.inventory.InventoryResource;
+import ca.ulaval.glo4002.cafe.api.layout.LayoutResource;
+import ca.ulaval.glo4002.cafe.api.operation.OperationResource;
 import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.domain.inventory.Ingredient;
@@ -53,11 +55,13 @@ public class ProductionApplicationContext implements ApplicationContext {
         cafeRepository.saveOrUpdate(cafe);
     }
 
-    private ResourceConfig createResourceConfig(CafeService cafeService, ReservationService groupService, CustomerService customersService) {
+    private ResourceConfig createResourceConfig(CafeService cafeService, ReservationService reservationService, CustomerService customersService) {
         return new ResourceConfig().packages("ca.ulaval.glo4002.cafe").property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true)
-            .register(new CafeResource(cafeService, customersService))
-            .register(new CustomerResource(customersService))
-            .register(new ReservationResource(groupService))
+            .register(new OperationResource(cafeService))
+            .register(new InventoryResource(cafeService))
+            .register(new LayoutResource(cafeService))
+            .register(new CustomerActionResource(customersService))
+            .register(new RegistrationResource(reservationService, customersService))
             .register(new CafeExceptionMapper())
             .register(new CatchallExceptionMapper())
             .register(new ConstraintViolationExceptionMapper());

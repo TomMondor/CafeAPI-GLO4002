@@ -1,6 +1,6 @@
 package ca.ulaval.glo4002.cafe.fixture.request;
 
-import ca.ulaval.glo4002.cafe.api.request.InventoryRequest;
+import ca.ulaval.glo4002.cafe.api.inventory.request.InventoryRequest;
 
 public class InventoryRequestFixture {
     public int chocolat = 100;
