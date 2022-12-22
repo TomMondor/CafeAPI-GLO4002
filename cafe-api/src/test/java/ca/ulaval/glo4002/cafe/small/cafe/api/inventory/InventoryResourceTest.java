@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import ca.ulaval.glo4002.cafe.api.inventory.InventoryResource;
 import ca.ulaval.glo4002.cafe.api.inventory.request.InventoryRequest;
 import ca.ulaval.glo4002.cafe.fixture.request.InventoryRequestFixture;
-import ca.ulaval.glo4002.cafe.service.CafeService;
-import ca.ulaval.glo4002.cafe.service.dto.InventoryDTO;
+import ca.ulaval.glo4002.cafe.service.inventory.InventoryService;
+import ca.ulaval.glo4002.cafe.service.inventory.dto.InventoryDTO;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
 
 import jakarta.ws.rs.core.Response;
@@ -24,13 +24,13 @@ public class InventoryResourceTest {
     private static final int MILK = 1;
     private static final int WATER = 1;
 
-    private CafeService cafeService;
+    private InventoryService inventoryService;
     private InventoryResource inventoryResource;
 
     @BeforeEach
     public void createInventoryResource() {
-        cafeService = mock(CafeService.class);
-        inventoryResource = new InventoryResource(cafeService);
+        inventoryService = mock(InventoryService.class);
+        inventoryResource = new InventoryResource(inventoryService);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class InventoryResourceTest {
 
         inventoryResource.putInventory(inventoryRequest);
 
-        verify(cafeService).addIngredientsToInventory(ingredientsParams);
+        verify(inventoryService).addIngredientsToInventory(ingredientsParams);
     }
 
     @Test
@@ -64,16 +64,16 @@ public class InventoryResourceTest {
 
     @Test
     public void whenGettingInventory_shouldGetInventory() {
-        when(cafeService.getInventory()).thenReturn(A_INVENTORY_DTO);
+        when(inventoryService.getInventory()).thenReturn(A_INVENTORY_DTO);
 
         inventoryResource.getInventory();
 
-        verify(cafeService).getInventory();
+        verify(inventoryService).getInventory();
     }
 
     @Test
     public void whenGettingInventory_shouldReturn200() {
-        when(cafeService.getInventory()).thenReturn(A_INVENTORY_DTO);
+        when(inventoryService.getInventory()).thenReturn(A_INVENTORY_DTO);
 
         Response response = inventoryResource.getInventory();
 

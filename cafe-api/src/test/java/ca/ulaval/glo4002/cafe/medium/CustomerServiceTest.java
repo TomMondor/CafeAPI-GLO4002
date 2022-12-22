@@ -29,6 +29,7 @@ import ca.ulaval.glo4002.cafe.service.customer.dto.OrderDTO;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckInCustomerParams;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckOutCustomerParams;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CustomerOrderParams;
+import ca.ulaval.glo4002.cafe.service.inventory.InventoryService;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,12 +47,14 @@ public class CustomerServiceTest {
     CustomerService customerService;
     CafeRepository cafeRepository;
     CafeService cafeService;
+    InventoryService inventoryService;
 
     @BeforeEach
     public void instanciateAttributes() {
         cafeRepository = new InMemoryCafeRepository();
         customerService = new CustomerService(cafeRepository, new CustomerFactory());
         cafeService = new CafeService(cafeRepository);
+        inventoryService = new InventoryService(cafeRepository);
         Cafe cafe = new CafeFactory().createCafe(List.of(new CoffeeFixture().withAmericano().build()));
         cafeRepository.saveOrUpdate(cafe);
     }
@@ -85,7 +88,7 @@ public class CustomerServiceTest {
     public void givenSavedCustomer_whenPlacingOrder_shouldSaveOrderForCustomer() {
         Order expectedOrder = new OrderFixture().build();
         customerService.checkIn(CHECK_IN_CUSTOMER_PARAMS);
-        cafeService.addIngredientsToInventory(INGREDIENT_PARAMS);
+        inventoryService.addIngredientsToInventory(INGREDIENT_PARAMS);
 
         customerService.placeOrder(CUSTOMER_ORDER_PARAMS);
         OrderDTO actualOrder = customerService.getOrder(A_CUSTOMER_ID);
@@ -107,7 +110,7 @@ public class CustomerServiceTest {
     public void givenSavedCustomerWithOrder_whenGettingOrder_shouldReturnValidOrderDTO() {
         OrderDTO expectedOrderDTO = new OrderDTO(CUSTOMER_ORDER.items());
         customerService.checkIn(CHECK_IN_CUSTOMER_PARAMS);
-        cafeService.addIngredientsToInventory(INGREDIENT_PARAMS);
+        inventoryService.addIngredientsToInventory(INGREDIENT_PARAMS);
         customerService.placeOrder(CUSTOMER_ORDER_PARAMS);
 
         OrderDTO actualOrderDTO = customerService.getOrder(CHECK_IN_CUSTOMER_PARAMS.customerId());
@@ -120,7 +123,7 @@ public class CustomerServiceTest {
         BillDTO expectedBillDTO = new BillDTO(CUSTOMER_ORDER.items(), new Amount(0),
             new Amount(2.25f), new Amount(0), new Amount(2.25f));
         customerService.checkIn(CHECK_IN_CUSTOMER_PARAMS);
-        cafeService.addIngredientsToInventory(INGREDIENT_PARAMS);
+        inventoryService.addIngredientsToInventory(INGREDIENT_PARAMS);
         customerService.placeOrder(CUSTOMER_ORDER_PARAMS);
         customerService.checkOut(CHECK_OUT_CUSTOMER_PARAMS);
 

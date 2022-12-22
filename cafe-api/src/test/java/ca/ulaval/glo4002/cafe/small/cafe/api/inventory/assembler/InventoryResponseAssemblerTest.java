@@ -12,7 +12,7 @@ import ca.ulaval.glo4002.cafe.domain.inventory.Ingredient;
 import ca.ulaval.glo4002.cafe.domain.inventory.IngredientType;
 import ca.ulaval.glo4002.cafe.domain.inventory.Inventory;
 import ca.ulaval.glo4002.cafe.domain.inventory.Quantity;
-import ca.ulaval.glo4002.cafe.service.dto.InventoryDTO;
+import ca.ulaval.glo4002.cafe.service.inventory.dto.InventoryDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

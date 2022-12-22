@@ -11,7 +11,9 @@ import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.domain.CafeName;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerNoBillException;
 import ca.ulaval.glo4002.cafe.domain.exception.InvalidMenuOrderException;
+import ca.ulaval.glo4002.cafe.domain.inventory.Ingredient;
 import ca.ulaval.glo4002.cafe.domain.inventory.IngredientType;
+import ca.ulaval.glo4002.cafe.domain.inventory.Quantity;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Customer;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.PendingOrder;
 import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
@@ -22,7 +24,6 @@ import ca.ulaval.glo4002.cafe.fixture.ReservationFixture;
 import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeService;
-import ca.ulaval.glo4002.cafe.service.dto.InventoryDTO;
 import ca.ulaval.glo4002.cafe.service.layout.LayoutService;
 import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
@@ -39,6 +40,9 @@ public class CafeServiceTest {
     private static final CoffeeParams A_COFFEE_PARAMS = new CoffeeParams("coffee name", 3.25f, INGREDIENT_PARAMS);
     private static final ConfigurationParams CONFIGURATION_PARAMS = new ConfigurationParams(5, NEW_CAFE_NAME.value(), "Default", "CA",
         "QC", "", 5);
+    private static final List<Ingredient> ENOUGH_INGREDIENTS = List.of(new Ingredient(IngredientType.Chocolate, new Quantity(25)),
+        new Ingredient(IngredientType.Milk, new Quantity(25)), new Ingredient(IngredientType.Water, new Quantity(25)),
+        new Ingredient(IngredientType.Espresso, new Quantity(25)));
 
     private CafeService cafeService;
     private LayoutService layoutService;
@@ -96,27 +100,16 @@ public class CafeServiceTest {
 
     @Test
     public void givenNonEmptyInventory_whenClosing_shouldClearInventory() {
-        cafeService.addIngredientsToInventory(INGREDIENT_PARAMS);
+        cafe.addIngredientsToInventory(ENOUGH_INGREDIENTS);
 
         cafeService.closeCafe();
 
-        assertEquals(0, cafeService.getInventory().ingredients().size());
-    }
-
-    @Test
-    public void whenAddingIngredientsToInventory_shouldAddIngredientsToInventory() {
-        cafeService.addIngredientsToInventory(INGREDIENT_PARAMS);
-
-        InventoryDTO inventory = cafeService.getInventory();
-        assertEquals(INGREDIENT_PARAMS.chocolate().quantity(), inventory.ingredients().get(IngredientType.Chocolate).quantity());
-        assertEquals(INGREDIENT_PARAMS.milk().quantity(), inventory.ingredients().get(IngredientType.Milk).quantity());
-        assertEquals(INGREDIENT_PARAMS.water().quantity(), inventory.ingredients().get(IngredientType.Water).quantity());
-        assertEquals(INGREDIENT_PARAMS.espresso().quantity(), inventory.ingredients().get(IngredientType.Espresso).quantity());
+        assertEquals(0, cafe.getInventory().getIngredients().size());
     }
 
     @Test
     public void whenAddingMenuItem_shouldAddMenuItem() {
-        cafeService.addIngredientsToInventory(INGREDIENT_PARAMS);
+        cafe.addIngredientsToInventory(ENOUGH_INGREDIENTS);
         PendingOrder pendingOrder = new PendingOrder(List.of(A_COFFEE_PARAMS.name()));
         cafe.checkIn(A_CUSTOMER, Optional.empty());
 

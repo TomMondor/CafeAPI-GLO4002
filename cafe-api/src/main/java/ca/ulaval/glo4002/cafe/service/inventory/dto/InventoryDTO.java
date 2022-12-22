@@ -1,4 +1,4 @@
-package ca.ulaval.glo4002.cafe.service.dto;
+package ca.ulaval.glo4002.cafe.service.inventory.dto;
 
 import java.util.HashMap;
 
