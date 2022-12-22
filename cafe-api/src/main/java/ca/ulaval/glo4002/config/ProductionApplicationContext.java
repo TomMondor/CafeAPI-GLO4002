@@ -26,10 +26,10 @@ import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
 import ca.ulaval.glo4002.cafe.domain.reservation.ReservationFactory;
 import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
-import ca.ulaval.glo4002.cafe.service.CafeService;
 import ca.ulaval.glo4002.cafe.service.customer.CustomerService;
 import ca.ulaval.glo4002.cafe.service.inventory.InventoryService;
 import ca.ulaval.glo4002.cafe.service.layout.LayoutService;
+import ca.ulaval.glo4002.cafe.service.operation.OperationService;
 import ca.ulaval.glo4002.cafe.service.registration.RegistrationService;
 
 public class ProductionApplicationContext implements ApplicationContext {
@@ -44,7 +44,7 @@ public class ProductionApplicationContext implements ApplicationContext {
 
         RegistrationService groupService = new RegistrationService(cafeRepository, new ReservationFactory(), new CustomerFactory());
         CustomerService customersService = new CustomerService(cafeRepository);
-        CafeService cafeService = new CafeService(cafeRepository);
+        OperationService cafeService = new OperationService(cafeRepository);
         LayoutService layoutService = new LayoutService(cafeRepository);
         InventoryService inventoryService = new InventoryService(cafeRepository);
 
@@ -59,7 +59,7 @@ public class ProductionApplicationContext implements ApplicationContext {
         cafeRepository.saveOrUpdate(cafe);
     }
 
-    private ResourceConfig createResourceConfig(CafeService cafeService, RegistrationService reservationService, CustomerService customersService,
+    private ResourceConfig createResourceConfig(OperationService cafeService, RegistrationService reservationService, CustomerService customersService,
                                                 LayoutService layoutService, InventoryService inventoryService) {
         return new ResourceConfig().packages("ca.ulaval.glo4002.cafe").property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true)
             .register(new OperationResource(cafeService))

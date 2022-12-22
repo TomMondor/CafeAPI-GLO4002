@@ -1,15 +1,16 @@
-package ca.ulaval.glo4002.cafe.service;
+package ca.ulaval.glo4002.cafe.service.operation;
 
 import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeConfiguration;
 import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
+import ca.ulaval.glo4002.cafe.service.CafeRepository;
 import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
 
-public class CafeService {
+public class OperationService {
     private final CafeRepository cafeRepository;
 
-    public CafeService(CafeRepository cafeRepository) {
+    public OperationService(CafeRepository cafeRepository) {
         this.cafeRepository = cafeRepository;
     }
 

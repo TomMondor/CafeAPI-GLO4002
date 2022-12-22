@@ -21,7 +21,6 @@ import ca.ulaval.glo4002.cafe.fixture.CoffeeFixture;
 import ca.ulaval.glo4002.cafe.fixture.OrderFixture;
 import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
-import ca.ulaval.glo4002.cafe.service.CafeService;
 import ca.ulaval.glo4002.cafe.service.customer.CustomerService;
 import ca.ulaval.glo4002.cafe.service.customer.dto.BillDTO;
 import ca.ulaval.glo4002.cafe.service.customer.dto.CustomerDTO;
@@ -30,6 +29,7 @@ import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckInCustomerParams;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckOutCustomerParams;
 import ca.ulaval.glo4002.cafe.service.customer.parameter.CustomerOrderParams;
 import ca.ulaval.glo4002.cafe.service.inventory.InventoryService;
+import ca.ulaval.glo4002.cafe.service.operation.OperationService;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
 import ca.ulaval.glo4002.cafe.service.registration.RegistrationService;
 
@@ -47,7 +47,7 @@ public class CustomerServiceTest {
 
     CustomerService customerService;
     CafeRepository cafeRepository;
-    CafeService cafeService;
+    OperationService cafeService;
     InventoryService inventoryService;
     RegistrationService registrationService;
 
@@ -56,7 +56,7 @@ public class CustomerServiceTest {
         cafeRepository = new InMemoryCafeRepository();
         customerService = new CustomerService(cafeRepository);
         registrationService = new RegistrationService(cafeRepository, new ReservationFactory(), new CustomerFactory());
-        cafeService = new CafeService(cafeRepository);
+        cafeService = new OperationService(cafeRepository);
         inventoryService = new InventoryService(cafeRepository);
         Cafe cafe = new CafeFactory().createCafe(List.of(new CoffeeFixture().withAmericano().build()));
         cafeRepository.saveOrUpdate(cafe);

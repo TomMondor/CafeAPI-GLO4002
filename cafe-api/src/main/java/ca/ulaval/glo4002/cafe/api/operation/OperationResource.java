@@ -2,7 +2,7 @@ package ca.ulaval.glo4002.cafe.api.operation;
 
 import ca.ulaval.glo4002.cafe.api.operation.request.CoffeeRequest;
 import ca.ulaval.glo4002.cafe.api.operation.request.ConfigurationRequest;
-import ca.ulaval.glo4002.cafe.service.CafeService;
+import ca.ulaval.glo4002.cafe.service.operation.OperationService;
 import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
@@ -17,9 +17,9 @@ import jakarta.ws.rs.core.Response;
 @Path("")
 @Produces(MediaType.APPLICATION_JSON)
 public class OperationResource {
-    private final CafeService cafeService;
+    private final OperationService cafeService;
 
-    public OperationResource(CafeService cafeService) {
+    public OperationResource(OperationService cafeService) {
         this.cafeService = cafeService;
     }
 

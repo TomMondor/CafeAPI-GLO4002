@@ -23,15 +23,15 @@ import ca.ulaval.glo4002.cafe.fixture.CustomerFixture;
 import ca.ulaval.glo4002.cafe.fixture.ReservationFixture;
 import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
 import ca.ulaval.glo4002.cafe.service.CafeRepository;
-import ca.ulaval.glo4002.cafe.service.CafeService;
 import ca.ulaval.glo4002.cafe.service.layout.LayoutService;
+import ca.ulaval.glo4002.cafe.service.operation.OperationService;
 import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CafeServiceTest {
+public class OperationServiceTest {
     private static final CafeName NEW_CAFE_NAME = new CafeName("Les 4-Ogres");
     private static final Customer A_CUSTOMER = new CustomerFixture().build();
     private static final Reservation A_RESERVATION = new ReservationFixture().build();
@@ -44,7 +44,7 @@ public class CafeServiceTest {
         new Ingredient(IngredientType.Milk, new Quantity(25)), new Ingredient(IngredientType.Water, new Quantity(25)),
         new Ingredient(IngredientType.Espresso, new Quantity(25)));
 
-    private CafeService cafeService;
+    private OperationService operationService;
     private LayoutService layoutService;
     private Cafe cafe;
     private CafeRepository cafeRepository;
@@ -53,14 +53,14 @@ public class CafeServiceTest {
     public void instantiateAttributes() {
         cafeRepository = new InMemoryCafeRepository();
         layoutService = new LayoutService(cafeRepository);
-        cafeService = new CafeService(cafeRepository);
+        operationService = new OperationService(cafeRepository);
         cafe = new CafeFactory().createCafe(List.of());
         cafeRepository.saveOrUpdate(cafe);
     }
 
     @Test
     public void whenUpdatingConfiguration_shouldUpdateConfiguration() {
-        cafeService.updateConfiguration(CONFIGURATION_PARAMS);
+        operationService.updateConfiguration(CONFIGURATION_PARAMS);
 
         assertEquals(NEW_CAFE_NAME, layoutService.getLayout().name());
     }
@@ -69,7 +69,7 @@ public class CafeServiceTest {
     public void givenAReservation_whenClosing_shouldClearReservations() {
         cafe.makeReservation(A_RESERVATION);
 
-        cafeService.closeCafe();
+        operationService.closeCafe();
 
         cafe = cafeRepository.get();
         assertEquals(0, cafe.getReservations().size());
@@ -80,7 +80,7 @@ public class CafeServiceTest {
         cafe.checkIn(A_CUSTOMER, Optional.empty());
         cafe.checkOut(A_CUSTOMER.getId());
 
-        cafeService.closeCafe();
+        operationService.closeCafe();
         cafe.checkIn(A_CUSTOMER, Optional.empty());
 
         cafe = cafeRepository.get();
@@ -92,7 +92,7 @@ public class CafeServiceTest {
         cafe.checkIn(A_CUSTOMER, Optional.empty());
         cafe.addMenuItem(new CoffeeFixture().withName(A_COFFEE_NAME).build());
 
-        cafeService.closeCafe();
+        operationService.closeCafe();
 
         assertThrows(InvalidMenuOrderException.class,
             () -> cafe.placeOrder(A_CUSTOMER.getId(), new PendingOrder(List.of(A_COFFEE_NAME))));
@@ -102,7 +102,7 @@ public class CafeServiceTest {
     public void givenNonEmptyInventory_whenClosing_shouldClearInventory() {
         cafe.addIngredientsToInventory(ENOUGH_INGREDIENTS);
 
-        cafeService.closeCafe();
+        operationService.closeCafe();
 
         assertEquals(0, cafe.getInventory().getIngredients().size());
     }
@@ -113,7 +113,7 @@ public class CafeServiceTest {
         PendingOrder pendingOrder = new PendingOrder(List.of(A_COFFEE_PARAMS.name()));
         cafe.checkIn(A_CUSTOMER, Optional.empty());
 
-        cafeService.addMenuItem(A_COFFEE_PARAMS);
+        operationService.addMenuItem(A_COFFEE_PARAMS);
 
         assertDoesNotThrow(() -> cafe.placeOrder(A_CUSTOMER.getId(), pendingOrder));
     }

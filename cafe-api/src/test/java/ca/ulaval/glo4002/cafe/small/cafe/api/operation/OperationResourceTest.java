@@ -9,7 +9,7 @@ import ca.ulaval.glo4002.cafe.api.operation.request.CoffeeRequest;
 import ca.ulaval.glo4002.cafe.api.operation.request.ConfigurationRequest;
 import ca.ulaval.glo4002.cafe.fixture.request.ConfigurationRequestFixture;
 import ca.ulaval.glo4002.cafe.fixture.request.InventoryRequestFixture;
-import ca.ulaval.glo4002.cafe.service.CafeService;
+import ca.ulaval.glo4002.cafe.service.operation.OperationService;
 import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
 import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
 import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
@@ -32,12 +32,12 @@ public class OperationResourceTest {
     private static final String A_NAME = "coffee";
     private static final InventoryRequest SOME_INGREDIENTS = new InventoryRequestFixture().build();
 
-    private CafeService cafeService;
+    private OperationService cafeService;
     private OperationResource operationResource;
 
     @BeforeEach
     public void createCafeResource() {
-        cafeService = mock(CafeService.class);
+        cafeService = mock(OperationService.class);
         operationResource = new OperationResource(cafeService);
     }
 
