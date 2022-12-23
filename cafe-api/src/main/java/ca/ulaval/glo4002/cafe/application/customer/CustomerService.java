@@ -6,10 +6,10 @@ import ca.ulaval.glo4002.cafe.application.customer.dto.CustomerDTO;
 import ca.ulaval.glo4002.cafe.application.customer.dto.OrderDTO;
 import ca.ulaval.glo4002.cafe.application.customer.parameter.CustomerOrderParams;
 import ca.ulaval.glo4002.cafe.domain.Cafe;
-import ca.ulaval.glo4002.cafe.domain.bill.Bill;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.Seat;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerId;
 import ca.ulaval.glo4002.cafe.domain.order.Order;
+import ca.ulaval.glo4002.cafe.domain.sale.bill.Bill;
 
 public class CustomerService {
     private final CafeRepository cafeRepository;
@@ -28,7 +28,7 @@ public class CustomerService {
     public OrderDTO getOrder(CustomerId customerId) {
         Cafe cafe = cafeRepository.get();
 
-        Order order = cafe.getOrderByCustomerId(customerId);
+        Order order = cafe.findOrderByCustomerId(customerId);
 
         return OrderDTO.fromOrder(order);
     }

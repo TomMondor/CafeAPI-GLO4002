@@ -1,4 +1,4 @@
-package ca.ulaval.glo4002.cafe.domain.bill;
+package ca.ulaval.glo4002.cafe.domain.sale.bill;
 
 import ca.ulaval.glo4002.cafe.domain.Amount;
 import ca.ulaval.glo4002.cafe.domain.Location;

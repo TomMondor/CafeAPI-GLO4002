@@ -1,4 +1,4 @@
-package ca.ulaval.glo4002.cafe.domain.bill;
+package ca.ulaval.glo4002.cafe.domain.sale.bill;
 
 public record Tax(float value) {
     public Tax add(Tax tax) {

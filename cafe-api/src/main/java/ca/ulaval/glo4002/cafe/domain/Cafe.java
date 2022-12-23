@@ -1,14 +1,10 @@
 package ca.ulaval.glo4002.cafe.domain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import ca.ulaval.glo4002.cafe.domain.bill.Bill;
-import ca.ulaval.glo4002.cafe.domain.bill.BillFactory;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerAlreadyVisitedException;
-import ca.ulaval.glo4002.cafe.domain.exception.CustomerNoBillException;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerNotFoundException;
 import ca.ulaval.glo4002.cafe.domain.exception.DuplicateGroupNameException;
 import ca.ulaval.glo4002.cafe.domain.exception.NoReservationsFoundException;
@@ -29,16 +25,16 @@ import ca.ulaval.glo4002.cafe.domain.reservation.GroupName;
 import ca.ulaval.glo4002.cafe.domain.reservation.Reservation;
 import ca.ulaval.glo4002.cafe.domain.reservation.ReservationStrategyFactory;
 import ca.ulaval.glo4002.cafe.domain.reservation.strategies.ReservationStrategy;
+import ca.ulaval.glo4002.cafe.domain.sale.PointOfSale;
+import ca.ulaval.glo4002.cafe.domain.sale.bill.Bill;
 
 public class Cafe {
     private final ReservationStrategyFactory reservationStrategyFactory;
     private final Layout layout;
     private final List<Reservation> reservations = new ArrayList<>();
-    private final HashMap<CustomerId, Bill> bills = new HashMap<>();
-    private final HashMap<CustomerId, Order> orders = new HashMap<>();
     private final Inventory inventory;
+    private final PointOfSale pointOfSale;
     private final Menu menu;
-    private TipRate groupTipRate;
     private CubeSize cubeSize;
     private CafeName cafeName;
     private Location location;
@@ -51,6 +47,7 @@ public class Cafe {
         this.layout = layoutFactory.createLayout(cafeConfiguration.cubeSize(), cubeNames);
 
         this.inventory = new Inventory();
+        this.pointOfSale = new PointOfSale();
         this.menu = menu;
 
         updateConfiguration(cafeConfiguration);
@@ -60,7 +57,7 @@ public class Cafe {
         this.cubeSize = cafeConfiguration.cubeSize();
         this.cafeName = cafeConfiguration.cafeName();
         this.reservationStrategy = reservationStrategyFactory.createReservationStrategy(cafeConfiguration.reservationType());
-        this.groupTipRate = cafeConfiguration.groupTipRate();
+        this.pointOfSale.updateGroupTipRate(cafeConfiguration.groupTipRate());
         this.location = cafeConfiguration.location();
     }
 
@@ -83,7 +80,7 @@ public class Cafe {
     public void checkIn(Customer customer, Optional<GroupName> groupName) {
         checkIfCustomerAlreadyVisitedToday(customer.getId());
         assignSeatToCustomer(customer, groupName);
-        orders.put(customer.getId(), new Order(List.of()));
+        pointOfSale.openBillForCustomer(customer.getId());
     }
 
     public Seat getSeatByCustomerId(CustomerId customerId) {
@@ -94,11 +91,8 @@ public class Cafe {
         menu.addMenuItem(newMenuItem);
     }
 
-    public Order getOrderByCustomerId(CustomerId customerId) {
-        if (!layout.isCustomerAlreadySeated(customerId)) {
-            throw new CustomerNotFoundException();
-        }
-        return orders.get(customerId);
+    public Order findOrderByCustomerId(CustomerId customerId) {
+        return pointOfSale.findOrderByCustomerId(customerId);
     }
 
     public void makeReservation(Reservation reservation) {
@@ -110,23 +104,15 @@ public class Cafe {
     public void close() {
         layout.reset(cubeSize);
         reservations.clear();
-        bills.clear();
         inventory.clear();
         menu.clearCustomMenuItems();
-        orders.clear();
+        pointOfSale.clearOrdersAndBills();
     }
 
     public void checkOut(CustomerId customerId) {
-        Bill bill = produceBill(customerId);
-        layout.checkout(customerId);
-        bills.put(customerId, bill);
-    }
-
-    private Bill produceBill(CustomerId customerId) {
         boolean isGroupMember = layout.getSeatByCustomerId(customerId).isReservedForGroup();
-        Order order = orders.get(customerId);
-        BillFactory billFactory = new BillFactory();
-        return billFactory.createBill(order, location, groupTipRate, isGroupMember);
+        pointOfSale.produceBill(customerId, location, isGroupMember);
+        layout.checkout(customerId);
     }
 
     public void placeOrder(CustomerId customerId, PendingOrder order) {
@@ -135,13 +121,7 @@ public class Cafe {
             throw new CustomerNotFoundException();
         }
         inventory.useIngredients(approvedOrder.ingredientsNeeded());
-        saveOrder(approvedOrder, customerId);
-    }
-
-    private void saveOrder(Order order, CustomerId customerId) {
-        Order previousOrder = orders.get(customerId);
-        Order combinedOrder = previousOrder.addAll(order);
-        orders.put(customerId, combinedOrder);
+        pointOfSale.saveOrder(customerId, approvedOrder);
     }
 
     public void addIngredientsToInventory(List<Ingredient> ingredients) {
@@ -149,18 +129,11 @@ public class Cafe {
     }
 
     public Bill getCustomerBill(CustomerId customerId) {
-        if (!bills.containsKey(customerId)) {
-            if (layout.isCustomerAlreadySeated(customerId)) {
-                throw new CustomerNoBillException();
-            } else {
-                throw new CustomerNotFoundException();
-            }
-        }
-        return bills.get(customerId);
+        return pointOfSale.findBillByCustomerId(customerId);
     }
 
     private void checkIfCustomerAlreadyVisitedToday(CustomerId customerId) {
-        if (bills.containsKey(customerId) || layout.isCustomerAlreadySeated(customerId)) {
+        if (pointOfSale.hasProducedBill(customerId) || layout.isCustomerAlreadySeated(customerId)) {
             throw new CustomerAlreadyVisitedException();
         }
     }

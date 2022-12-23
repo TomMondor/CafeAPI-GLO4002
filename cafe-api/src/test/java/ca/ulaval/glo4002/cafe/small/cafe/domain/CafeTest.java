@@ -13,7 +13,6 @@ import ca.ulaval.glo4002.cafe.domain.Country;
 import ca.ulaval.glo4002.cafe.domain.Province;
 import ca.ulaval.glo4002.cafe.domain.State;
 import ca.ulaval.glo4002.cafe.domain.TipRate;
-import ca.ulaval.glo4002.cafe.domain.bill.Bill;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerAlreadyVisitedException;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerNoBillException;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerNotFoundException;
@@ -46,6 +45,7 @@ import ca.ulaval.glo4002.cafe.domain.reservation.GroupName;
 import ca.ulaval.glo4002.cafe.domain.reservation.GroupSize;
 import ca.ulaval.glo4002.cafe.domain.reservation.Reservation;
 import ca.ulaval.glo4002.cafe.domain.reservation.ReservationType;
+import ca.ulaval.glo4002.cafe.domain.sale.bill.Bill;
 import ca.ulaval.glo4002.cafe.fixture.CafeConfigurationFixture;
 import ca.ulaval.glo4002.cafe.fixture.CoffeeFixture;
 import ca.ulaval.glo4002.cafe.fixture.CustomerFixture;
@@ -405,7 +405,7 @@ public class CafeTest {
 
         cafe.placeOrder(aCustomer.getId(), THE_MATCHING_PENDING_ORDER);
 
-        assertEquals(AN_ORDER, cafe.getOrderByCustomerId(aCustomer.getId()));
+        assertEquals(AN_ORDER, cafe.findOrderByCustomerId(aCustomer.getId()));
     }
 
     @Test
@@ -417,7 +417,7 @@ public class CafeTest {
 
         cafe.placeOrder(aCustomer.getId(), new PendingOrderFixture().fromOrder(ANOTHER_ORDER).build());
 
-        assertEquals(AN_ORDER.addAll(ANOTHER_ORDER), cafe.getOrderByCustomerId(aCustomer.getId()));
+        assertEquals(AN_ORDER.addAll(ANOTHER_ORDER), cafe.findOrderByCustomerId(aCustomer.getId()));
     }
 
     @Test
@@ -471,7 +471,7 @@ public class CafeTest {
         } catch (InsufficientIngredientsException ignored) {
         }
 
-        assertTrue(cafe.getOrderByCustomerId(aCustomer.getId()).items().isEmpty());
+        assertTrue(cafe.findOrderByCustomerId(aCustomer.getId()).items().isEmpty());
     }
 
     @Test
@@ -507,14 +507,14 @@ public class CafeTest {
         } catch (InvalidMenuOrderException ignored) {
         }
 
-        assertTrue(cafe.getOrderByCustomerId(aCustomer.getId()).items().isEmpty());
+        assertTrue(cafe.findOrderByCustomerId(aCustomer.getId()).items().isEmpty());
     }
 
     @Test
     public void givenInvalidCustomerId_whenGettingOrderByCustomerId_shouldThrowCustomerNotFoundException() {
         Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
 
-        assertThrows(CustomerNotFoundException.class, () -> cafe.getOrderByCustomerId(new CustomerId("Invalid")));
+        assertThrows(CustomerNotFoundException.class, () -> cafe.findOrderByCustomerId(new CustomerId("Invalid")));
     }
 
     @Test
@@ -762,7 +762,7 @@ public class CafeTest {
         cafe.close();
         cafe.checkIn(new CustomerFixture().withCustomerId(aCustomer.getId()).build(), Optional.empty());
 
-        assertTrue(cafe.getOrderByCustomerId(aCustomer.getId()).items().isEmpty());
+        assertTrue(cafe.findOrderByCustomerId(aCustomer.getId()).items().isEmpty());
     }
 
     @Test

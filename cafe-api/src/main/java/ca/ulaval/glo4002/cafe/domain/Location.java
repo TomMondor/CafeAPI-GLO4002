@@ -2,7 +2,7 @@ package ca.ulaval.glo4002.cafe.domain;
 
 import java.util.Optional;
 
-import ca.ulaval.glo4002.cafe.domain.bill.Tax;
+import ca.ulaval.glo4002.cafe.domain.sale.bill.Tax;
 
 public record Location(Country country, Optional<Province> province, Optional<State> state) {
     public static Location fromDetails(String countryString, String provinceString, String stateString) {

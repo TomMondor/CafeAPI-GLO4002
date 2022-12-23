@@ -8,8 +8,8 @@ import ca.ulaval.glo4002.cafe.domain.Country;
 import ca.ulaval.glo4002.cafe.domain.Location;
 import ca.ulaval.glo4002.cafe.domain.Province;
 import ca.ulaval.glo4002.cafe.domain.State;
-import ca.ulaval.glo4002.cafe.domain.bill.Tax;
 import ca.ulaval.glo4002.cafe.domain.exception.InvalidConfigurationCountryException;
+import ca.ulaval.glo4002.cafe.domain.sale.bill.Tax;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,7 +1,7 @@
 package ca.ulaval.glo4002.cafe.domain;
 
-import ca.ulaval.glo4002.cafe.domain.bill.Tax;
 import ca.ulaval.glo4002.cafe.domain.exception.InvalidConfigurationCountryException;
+import ca.ulaval.glo4002.cafe.domain.sale.bill.Tax;
 
 public enum Country {
     CA(new Tax(0.05f)),

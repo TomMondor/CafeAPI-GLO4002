@@ -12,7 +12,6 @@ import ca.ulaval.glo4002.cafe.application.customer.dto.CustomerDTO;
 import ca.ulaval.glo4002.cafe.application.customer.dto.OrderDTO;
 import ca.ulaval.glo4002.cafe.application.customer.parameter.CustomerOrderParams;
 import ca.ulaval.glo4002.cafe.domain.Cafe;
-import ca.ulaval.glo4002.cafe.domain.bill.Bill;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.Seat;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.SeatNumber;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Customer;
@@ -21,6 +20,7 @@ import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerName;
 import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
 import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
 import ca.ulaval.glo4002.cafe.domain.order.Order;
+import ca.ulaval.glo4002.cafe.domain.sale.bill.Bill;
 import ca.ulaval.glo4002.cafe.fixture.BillFixture;
 import ca.ulaval.glo4002.cafe.fixture.CoffeeFixture;
 import ca.ulaval.glo4002.cafe.fixture.CustomerFixture;
@@ -87,7 +87,7 @@ public class CustomerServiceTest {
 
     @Test
     public void whenGettingOrders_shouldGetCafe() {
-        when(mockCafe.getOrderByCustomerId(CUSTOMER_ID)).thenReturn(A_ORDER);
+        when(mockCafe.findOrderByCustomerId(CUSTOMER_ID)).thenReturn(A_ORDER);
 
         customersService.getOrder(CUSTOMER_ID);
 
@@ -96,17 +96,17 @@ public class CustomerServiceTest {
 
     @Test
     public void whenGettingOrders_shouldGetOrdersFromCafe() {
-        when(mockCafe.getOrderByCustomerId(CUSTOMER_ID)).thenReturn(A_ORDER);
+        when(mockCafe.findOrderByCustomerId(CUSTOMER_ID)).thenReturn(A_ORDER);
 
         customersService.getOrder(CUSTOMER_ID);
 
-        verify(mockCafe).getOrderByCustomerId(CUSTOMER_ID);
+        verify(mockCafe).findOrderByCustomerId(CUSTOMER_ID);
     }
 
     @Test
     public void whenGettingOrders_shouldReturnMatchingOrderDTO() {
         Order expectedOrders = new OrderFixture().withItems(List.of(AN_AMERICANO_COFFEE, A_DARK_ROAST_COFFEE)).build();
-        when(mockCafe.getOrderByCustomerId(CUSTOMER_ID)).thenReturn(expectedOrders);
+        when(mockCafe.findOrderByCustomerId(CUSTOMER_ID)).thenReturn(expectedOrders);
 
         OrderDTO actualOrderDTO = customersService.getOrder(CUSTOMER_ID);
 
