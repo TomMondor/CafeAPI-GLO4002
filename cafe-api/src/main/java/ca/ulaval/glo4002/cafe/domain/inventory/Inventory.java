@@ -18,7 +18,7 @@ public class Inventory {
 
     public void add(List<Ingredient> newIngredients) {
         newIngredients.forEach(ingredient -> ingredients.put(ingredient.type(),
-            ingredients.containsKey(ingredient.type()) ? ingredients.get(ingredient.type()).add(ingredient) : ingredient));
+            ingredients.containsKey(ingredient.type()) ? ingredients.get(ingredient.type()).add(ingredient.quantity()) : ingredient));
     }
 
     public void useIngredients(List<Ingredient> ingredients) {
@@ -37,13 +37,13 @@ public class Inventory {
     }
 
     private void removeIngredients(List<Ingredient> ingredientsToRemove) {
-        ingredientsToRemove.forEach(ingredient -> ingredients.put(ingredient.type(), ingredients.get(ingredient.type()).remove(ingredient)));
+        ingredientsToRemove.forEach(ingredient -> ingredients.put(ingredient.type(), ingredients.get(ingredient.type()).remove(ingredient.quantity())));
     }
 
     private List<Ingredient> mergeIngredients(List<Ingredient> ingredientsNeeded) {
         HashMap<IngredientType, Ingredient> ingredients = new HashMap<>();
         for (Ingredient ingredient : ingredientsNeeded) {
-            Ingredient newIngredient = ingredients.containsKey(ingredient.type()) ? ingredients.get(ingredient.type()).add(ingredient) : ingredient;
+            Ingredient newIngredient = ingredients.containsKey(ingredient.type()) ? ingredients.get(ingredient.type()).add(ingredient.quantity()) : ingredient;
             ingredients.put(ingredient.type(), newIngredient);
         }
         return ingredients.values().stream().toList();
