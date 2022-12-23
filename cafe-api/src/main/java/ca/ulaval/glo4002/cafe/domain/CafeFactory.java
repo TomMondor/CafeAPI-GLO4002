@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import ca.ulaval.glo4002.cafe.domain.layout.cube.CubeName;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.CubeSize;
+import ca.ulaval.glo4002.cafe.domain.location.Country;
+import ca.ulaval.glo4002.cafe.domain.location.Location;
 import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
 import ca.ulaval.glo4002.cafe.domain.menu.Menu;
 import ca.ulaval.glo4002.cafe.domain.menu.MenuFactory;

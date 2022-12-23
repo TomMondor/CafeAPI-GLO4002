@@ -17,6 +17,7 @@ import ca.ulaval.glo4002.cafe.domain.layout.cube.CubeSize;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.Seat;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Customer;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerId;
+import ca.ulaval.glo4002.cafe.domain.location.Location;
 import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
 import ca.ulaval.glo4002.cafe.domain.menu.Menu;
 import ca.ulaval.glo4002.cafe.domain.order.Order;

@@ -3,11 +3,11 @@ package ca.ulaval.glo4002.cafe.domain.sale;
 import java.util.HashMap;
 import java.util.List;
 
-import ca.ulaval.glo4002.cafe.domain.Location;
 import ca.ulaval.glo4002.cafe.domain.TipRate;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerNoBillException;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerNotFoundException;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerId;
+import ca.ulaval.glo4002.cafe.domain.location.Location;
 import ca.ulaval.glo4002.cafe.domain.order.Order;
 import ca.ulaval.glo4002.cafe.domain.sale.bill.Bill;
 import ca.ulaval.glo4002.cafe.domain.sale.bill.BillFactory;

@@ -4,12 +4,12 @@ import java.util.Optional;
 
 import ca.ulaval.glo4002.cafe.domain.CafeConfiguration;
 import ca.ulaval.glo4002.cafe.domain.CafeName;
-import ca.ulaval.glo4002.cafe.domain.Country;
-import ca.ulaval.glo4002.cafe.domain.Location;
-import ca.ulaval.glo4002.cafe.domain.Province;
-import ca.ulaval.glo4002.cafe.domain.State;
 import ca.ulaval.glo4002.cafe.domain.TipRate;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.CubeSize;
+import ca.ulaval.glo4002.cafe.domain.location.Country;
+import ca.ulaval.glo4002.cafe.domain.location.Location;
+import ca.ulaval.glo4002.cafe.domain.location.Province;
+import ca.ulaval.glo4002.cafe.domain.location.State;
 import ca.ulaval.glo4002.cafe.domain.reservation.ReservationType;
 
 public class CafeConfigurationFixture {
