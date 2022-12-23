@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import ca.ulaval.glo4002.cafe.api.customer.customerAction.assembler.BillResponseAssembler;
 import ca.ulaval.glo4002.cafe.api.customer.customerAction.response.BillResponse;
 import ca.ulaval.glo4002.cafe.application.customer.dto.BillDTO;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Amount;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
+import ca.ulaval.glo4002.cafe.domain.Amount;
+import ca.ulaval.glo4002.cafe.domain.order.Order;
 import ca.ulaval.glo4002.cafe.fixture.BillFixture;
 import ca.ulaval.glo4002.cafe.fixture.CoffeeFixture;
 

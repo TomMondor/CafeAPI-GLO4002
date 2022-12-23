@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerId;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.PendingOrder;
 import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
+import ca.ulaval.glo4002.cafe.domain.order.PendingOrder;
 
 public record CustomerOrderParams(CustomerId customerId, PendingOrder order) {
     public CustomerOrderParams(String customerId, List<String> orders) {

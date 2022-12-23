@@ -6,17 +6,17 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ca.ulaval.glo4002.cafe.domain.Amount;
 import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.domain.CafeName;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.Cube;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.CubeName;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Amount;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Customer;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.PendingOrder;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Recipe;
 import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
 import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
+import ca.ulaval.glo4002.cafe.domain.order.PendingOrder;
+import ca.ulaval.glo4002.cafe.domain.order.Recipe;
 import ca.ulaval.glo4002.cafe.fixture.CustomerFixture;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

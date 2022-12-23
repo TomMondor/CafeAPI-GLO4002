@@ -8,11 +8,10 @@ import ca.ulaval.glo4002.cafe.domain.Country;
 import ca.ulaval.glo4002.cafe.domain.Location;
 import ca.ulaval.glo4002.cafe.domain.Province;
 import ca.ulaval.glo4002.cafe.domain.State;
+import ca.ulaval.glo4002.cafe.domain.bill.Tax;
 import ca.ulaval.glo4002.cafe.domain.exception.InvalidConfigurationCountryException;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Tax;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LocationTest {
     private static final String INVALID_COUNTRY = "WWW";

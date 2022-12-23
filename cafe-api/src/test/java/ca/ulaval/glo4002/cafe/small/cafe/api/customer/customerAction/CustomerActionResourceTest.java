@@ -14,11 +14,11 @@ import ca.ulaval.glo4002.cafe.application.customer.dto.BillDTO;
 import ca.ulaval.glo4002.cafe.application.customer.dto.CustomerDTO;
 import ca.ulaval.glo4002.cafe.application.customer.dto.OrderDTO;
 import ca.ulaval.glo4002.cafe.application.customer.parameter.CustomerOrderParams;
+import ca.ulaval.glo4002.cafe.domain.Amount;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.SeatNumber;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Amount;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerId;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerName;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
+import ca.ulaval.glo4002.cafe.domain.order.Order;
 import ca.ulaval.glo4002.cafe.domain.reservation.GroupName;
 import ca.ulaval.glo4002.cafe.fixture.request.OrderRequestFixture;
 

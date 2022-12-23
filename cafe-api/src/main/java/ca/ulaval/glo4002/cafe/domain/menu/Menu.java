@@ -8,8 +8,8 @@ import java.util.Set;
 
 import ca.ulaval.glo4002.cafe.domain.exception.DuplicateMenuItemNameException;
 import ca.ulaval.glo4002.cafe.domain.exception.InvalidMenuOrderException;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.PendingOrder;
+import ca.ulaval.glo4002.cafe.domain.order.Order;
+import ca.ulaval.glo4002.cafe.domain.order.PendingOrder;
 
 public class Menu {
     private final Map<CoffeeName, Coffee> menuItems = new HashMap<>();

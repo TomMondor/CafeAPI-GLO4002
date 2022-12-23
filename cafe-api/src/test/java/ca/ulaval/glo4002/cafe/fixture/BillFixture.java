@@ -2,12 +2,12 @@ package ca.ulaval.glo4002.cafe.fixture;
 
 import java.util.List;
 
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Amount;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.bill.Bill;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
-import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Recipe;
+import ca.ulaval.glo4002.cafe.domain.Amount;
+import ca.ulaval.glo4002.cafe.domain.bill.Bill;
 import ca.ulaval.glo4002.cafe.domain.menu.Coffee;
 import ca.ulaval.glo4002.cafe.domain.menu.CoffeeName;
+import ca.ulaval.glo4002.cafe.domain.order.Order;
+import ca.ulaval.glo4002.cafe.domain.order.Recipe;
 
 public class BillFixture {
     private Order coffeeOrder = new Order(List.of(
