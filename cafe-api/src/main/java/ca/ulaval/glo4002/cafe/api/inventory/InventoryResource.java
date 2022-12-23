@@ -3,8 +3,8 @@ package ca.ulaval.glo4002.cafe.api.inventory;
 import ca.ulaval.glo4002.cafe.api.inventory.assembler.InventoryResponseAssembler;
 import ca.ulaval.glo4002.cafe.api.inventory.request.InventoryRequest;
 import ca.ulaval.glo4002.cafe.api.inventory.response.InventoryResponse;
-import ca.ulaval.glo4002.cafe.service.inventory.InventoryService;
-import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
+import ca.ulaval.glo4002.cafe.application.inventory.InventoryService;
+import ca.ulaval.glo4002.cafe.application.parameter.IngredientsParams;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.GET;

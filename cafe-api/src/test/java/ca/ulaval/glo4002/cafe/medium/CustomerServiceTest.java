@@ -6,6 +6,18 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ca.ulaval.glo4002.cafe.application.CafeRepository;
+import ca.ulaval.glo4002.cafe.application.customer.CustomerService;
+import ca.ulaval.glo4002.cafe.application.customer.dto.BillDTO;
+import ca.ulaval.glo4002.cafe.application.customer.dto.CustomerDTO;
+import ca.ulaval.glo4002.cafe.application.customer.dto.OrderDTO;
+import ca.ulaval.glo4002.cafe.application.customer.parameter.CheckInCustomerParams;
+import ca.ulaval.glo4002.cafe.application.customer.parameter.CheckOutCustomerParams;
+import ca.ulaval.glo4002.cafe.application.customer.parameter.CustomerOrderParams;
+import ca.ulaval.glo4002.cafe.application.inventory.InventoryService;
+import ca.ulaval.glo4002.cafe.application.operation.OperationService;
+import ca.ulaval.glo4002.cafe.application.parameter.IngredientsParams;
+import ca.ulaval.glo4002.cafe.application.registration.RegistrationService;
 import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.SeatNumber;
@@ -20,18 +32,6 @@ import ca.ulaval.glo4002.cafe.domain.reservation.ReservationFactory;
 import ca.ulaval.glo4002.cafe.fixture.CoffeeFixture;
 import ca.ulaval.glo4002.cafe.fixture.OrderFixture;
 import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
-import ca.ulaval.glo4002.cafe.service.CafeRepository;
-import ca.ulaval.glo4002.cafe.service.customer.CustomerService;
-import ca.ulaval.glo4002.cafe.service.customer.dto.BillDTO;
-import ca.ulaval.glo4002.cafe.service.customer.dto.CustomerDTO;
-import ca.ulaval.glo4002.cafe.service.customer.dto.OrderDTO;
-import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckInCustomerParams;
-import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckOutCustomerParams;
-import ca.ulaval.glo4002.cafe.service.customer.parameter.CustomerOrderParams;
-import ca.ulaval.glo4002.cafe.service.inventory.InventoryService;
-import ca.ulaval.glo4002.cafe.service.operation.OperationService;
-import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
-import ca.ulaval.glo4002.cafe.service.registration.RegistrationService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

@@ -6,9 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.cafe.api.layout.LayoutResource;
+import ca.ulaval.glo4002.cafe.application.layout.LayoutService;
+import ca.ulaval.glo4002.cafe.application.layout.dto.LayoutDTO;
 import ca.ulaval.glo4002.cafe.domain.CafeName;
-import ca.ulaval.glo4002.cafe.service.layout.LayoutService;
-import ca.ulaval.glo4002.cafe.service.layout.dto.LayoutDTO;
 
 import jakarta.ws.rs.core.Response;
 

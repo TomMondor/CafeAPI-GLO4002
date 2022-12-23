@@ -5,6 +5,13 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ca.ulaval.glo4002.cafe.application.CafeRepository;
+import ca.ulaval.glo4002.cafe.application.customer.CustomerService;
+import ca.ulaval.glo4002.cafe.application.customer.parameter.CheckInCustomerParams;
+import ca.ulaval.glo4002.cafe.application.customer.parameter.CheckOutCustomerParams;
+import ca.ulaval.glo4002.cafe.application.registration.RegistrationService;
+import ca.ulaval.glo4002.cafe.application.registration.dto.ReservationDTO;
+import ca.ulaval.glo4002.cafe.application.registration.parameter.ReservationRequestParams;
 import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.domain.exception.CustomerNotFoundException;
@@ -14,13 +21,6 @@ import ca.ulaval.glo4002.cafe.domain.reservation.GroupName;
 import ca.ulaval.glo4002.cafe.domain.reservation.GroupSize;
 import ca.ulaval.glo4002.cafe.domain.reservation.ReservationFactory;
 import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
-import ca.ulaval.glo4002.cafe.service.CafeRepository;
-import ca.ulaval.glo4002.cafe.service.customer.CustomerService;
-import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckInCustomerParams;
-import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckOutCustomerParams;
-import ca.ulaval.glo4002.cafe.service.registration.RegistrationService;
-import ca.ulaval.glo4002.cafe.service.registration.dto.ReservationDTO;
-import ca.ulaval.glo4002.cafe.service.registration.parameter.ReservationRequestParams;
 
 import static org.junit.jupiter.api.Assertions.*;
 

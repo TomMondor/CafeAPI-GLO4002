@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.cafe.api.customer.customerAction.assembler.CustomerResponseAssembler;
 import ca.ulaval.glo4002.cafe.api.customer.customerAction.response.CustomerResponse;
+import ca.ulaval.glo4002.cafe.application.customer.dto.CustomerDTO;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.Seat;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.SeatNumber;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Customer;
@@ -13,7 +14,6 @@ import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerName;
 import ca.ulaval.glo4002.cafe.domain.reservation.GroupName;
 import ca.ulaval.glo4002.cafe.fixture.CustomerFixture;
 import ca.ulaval.glo4002.cafe.fixture.SeatFixture;
-import ca.ulaval.glo4002.cafe.service.customer.dto.CustomerDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

@@ -6,6 +6,12 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ca.ulaval.glo4002.cafe.application.CafeRepository;
+import ca.ulaval.glo4002.cafe.application.layout.LayoutService;
+import ca.ulaval.glo4002.cafe.application.operation.OperationService;
+import ca.ulaval.glo4002.cafe.application.parameter.CoffeeParams;
+import ca.ulaval.glo4002.cafe.application.parameter.ConfigurationParams;
+import ca.ulaval.glo4002.cafe.application.parameter.IngredientsParams;
 import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.domain.CafeName;
@@ -22,12 +28,6 @@ import ca.ulaval.glo4002.cafe.fixture.CoffeeFixture;
 import ca.ulaval.glo4002.cafe.fixture.CustomerFixture;
 import ca.ulaval.glo4002.cafe.fixture.ReservationFixture;
 import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
-import ca.ulaval.glo4002.cafe.service.CafeRepository;
-import ca.ulaval.glo4002.cafe.service.layout.LayoutService;
-import ca.ulaval.glo4002.cafe.service.operation.OperationService;
-import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
-import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
-import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
 
 import static org.junit.jupiter.api.Assertions.*;
 

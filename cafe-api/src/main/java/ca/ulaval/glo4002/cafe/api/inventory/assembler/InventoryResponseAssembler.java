@@ -1,8 +1,8 @@
 package ca.ulaval.glo4002.cafe.api.inventory.assembler;
 
 import ca.ulaval.glo4002.cafe.api.inventory.response.InventoryResponse;
+import ca.ulaval.glo4002.cafe.application.inventory.dto.InventoryDTO;
 import ca.ulaval.glo4002.cafe.domain.inventory.IngredientType;
-import ca.ulaval.glo4002.cafe.service.inventory.dto.InventoryDTO;
 
 public class InventoryResponseAssembler {
     public InventoryResponse toInventoryResponse(InventoryDTO inventoryDTO) {

@@ -2,10 +2,10 @@ package ca.ulaval.glo4002.cafe.api.operation;
 
 import ca.ulaval.glo4002.cafe.api.operation.request.CoffeeRequest;
 import ca.ulaval.glo4002.cafe.api.operation.request.ConfigurationRequest;
-import ca.ulaval.glo4002.cafe.service.operation.OperationService;
-import ca.ulaval.glo4002.cafe.service.parameter.CoffeeParams;
-import ca.ulaval.glo4002.cafe.service.parameter.ConfigurationParams;
-import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
+import ca.ulaval.glo4002.cafe.application.operation.OperationService;
+import ca.ulaval.glo4002.cafe.application.parameter.CoffeeParams;
+import ca.ulaval.glo4002.cafe.application.parameter.ConfigurationParams;
+import ca.ulaval.glo4002.cafe.application.parameter.IngredientsParams;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.POST;

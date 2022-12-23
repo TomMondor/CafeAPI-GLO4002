@@ -9,6 +9,11 @@ import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.cafe.api.customer.customerAction.CustomerActionResource;
 import ca.ulaval.glo4002.cafe.api.customer.customerAction.request.OrderRequest;
+import ca.ulaval.glo4002.cafe.application.customer.CustomerService;
+import ca.ulaval.glo4002.cafe.application.customer.dto.BillDTO;
+import ca.ulaval.glo4002.cafe.application.customer.dto.CustomerDTO;
+import ca.ulaval.glo4002.cafe.application.customer.dto.OrderDTO;
+import ca.ulaval.glo4002.cafe.application.customer.parameter.CustomerOrderParams;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.SeatNumber;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.Amount;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerId;
@@ -16,11 +21,6 @@ import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.CustomerName;
 import ca.ulaval.glo4002.cafe.domain.layout.cube.seat.customer.order.Order;
 import ca.ulaval.glo4002.cafe.domain.reservation.GroupName;
 import ca.ulaval.glo4002.cafe.fixture.request.OrderRequestFixture;
-import ca.ulaval.glo4002.cafe.service.customer.CustomerService;
-import ca.ulaval.glo4002.cafe.service.customer.dto.BillDTO;
-import ca.ulaval.glo4002.cafe.service.customer.dto.CustomerDTO;
-import ca.ulaval.glo4002.cafe.service.customer.dto.OrderDTO;
-import ca.ulaval.glo4002.cafe.service.customer.parameter.CustomerOrderParams;
 
 import jakarta.ws.rs.core.Response;
 

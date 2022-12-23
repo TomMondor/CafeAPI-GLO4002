@@ -17,7 +17,7 @@ public class BillFactory {
 
     private Amount getOrderSubtotal(Order order) {
         return new Amount(order.items().stream()
-                .map(coffee -> coffee.price().value())
-                .reduce(0f, Float::sum));
+            .map(coffee -> coffee.price().value())
+            .reduce(0f, Float::sum));
     }
 }

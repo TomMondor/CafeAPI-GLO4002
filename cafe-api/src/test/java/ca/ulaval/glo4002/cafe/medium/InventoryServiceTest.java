@@ -5,14 +5,14 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ca.ulaval.glo4002.cafe.application.CafeRepository;
+import ca.ulaval.glo4002.cafe.application.inventory.InventoryService;
+import ca.ulaval.glo4002.cafe.application.inventory.dto.InventoryDTO;
+import ca.ulaval.glo4002.cafe.application.parameter.IngredientsParams;
 import ca.ulaval.glo4002.cafe.domain.Cafe;
 import ca.ulaval.glo4002.cafe.domain.CafeFactory;
 import ca.ulaval.glo4002.cafe.domain.inventory.IngredientType;
 import ca.ulaval.glo4002.cafe.infrastructure.InMemoryCafeRepository;
-import ca.ulaval.glo4002.cafe.service.CafeRepository;
-import ca.ulaval.glo4002.cafe.service.inventory.InventoryService;
-import ca.ulaval.glo4002.cafe.service.inventory.dto.InventoryDTO;
-import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

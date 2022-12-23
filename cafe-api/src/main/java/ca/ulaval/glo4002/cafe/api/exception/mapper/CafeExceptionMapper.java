@@ -13,6 +13,6 @@ public class CafeExceptionMapper implements ExceptionMapper<CafeException> {
     public Response toResponse(CafeException exception) {
         ErrorResponse response = new ErrorResponse(exception.getError(), exception.getMessage());
         return Response.status(ExceptionStatusMapper.getResponseStatus(exception))
-                .entity(response).build();
+            .entity(response).build();
     }
 }

@@ -9,14 +9,14 @@ import ca.ulaval.glo4002.cafe.api.customer.registration.RegistrationResource;
 import ca.ulaval.glo4002.cafe.api.customer.registration.request.CheckInRequest;
 import ca.ulaval.glo4002.cafe.api.customer.registration.request.CheckOutRequest;
 import ca.ulaval.glo4002.cafe.api.customer.registration.request.ReservationRequest;
+import ca.ulaval.glo4002.cafe.application.customer.parameter.CheckInCustomerParams;
+import ca.ulaval.glo4002.cafe.application.customer.parameter.CheckOutCustomerParams;
+import ca.ulaval.glo4002.cafe.application.registration.RegistrationService;
+import ca.ulaval.glo4002.cafe.application.registration.dto.ReservationDTO;
+import ca.ulaval.glo4002.cafe.application.registration.parameter.ReservationRequestParams;
 import ca.ulaval.glo4002.cafe.fixture.request.CheckInRequestFixture;
 import ca.ulaval.glo4002.cafe.fixture.request.CheckOutRequestFixture;
 import ca.ulaval.glo4002.cafe.fixture.request.ReservationRequestFixture;
-import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckInCustomerParams;
-import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckOutCustomerParams;
-import ca.ulaval.glo4002.cafe.service.registration.RegistrationService;
-import ca.ulaval.glo4002.cafe.service.registration.dto.ReservationDTO;
-import ca.ulaval.glo4002.cafe.service.registration.parameter.ReservationRequestParams;
 
 import jakarta.ws.rs.core.Response;
 

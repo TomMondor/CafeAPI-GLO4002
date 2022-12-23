@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.cafe.api.inventory.InventoryResource;
 import ca.ulaval.glo4002.cafe.api.inventory.request.InventoryRequest;
+import ca.ulaval.glo4002.cafe.application.inventory.InventoryService;
+import ca.ulaval.glo4002.cafe.application.inventory.dto.InventoryDTO;
+import ca.ulaval.glo4002.cafe.application.parameter.IngredientsParams;
 import ca.ulaval.glo4002.cafe.fixture.request.InventoryRequestFixture;
-import ca.ulaval.glo4002.cafe.service.inventory.InventoryService;
-import ca.ulaval.glo4002.cafe.service.inventory.dto.InventoryDTO;
-import ca.ulaval.glo4002.cafe.service.parameter.IngredientsParams;
 
 import jakarta.ws.rs.core.Response;
 

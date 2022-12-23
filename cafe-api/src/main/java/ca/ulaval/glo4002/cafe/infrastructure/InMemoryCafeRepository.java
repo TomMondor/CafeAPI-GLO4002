@@ -2,9 +2,9 @@ package ca.ulaval.glo4002.cafe.infrastructure;
 
 import java.util.Optional;
 
+import ca.ulaval.glo4002.cafe.application.CafeRepository;
+import ca.ulaval.glo4002.cafe.application.exception.CafeNotFoundException;
 import ca.ulaval.glo4002.cafe.domain.Cafe;
-import ca.ulaval.glo4002.cafe.service.CafeRepository;
-import ca.ulaval.glo4002.cafe.service.exception.CafeNotFoundException;
 
 public class InMemoryCafeRepository implements CafeRepository {
     private Optional<Cafe> cafe = Optional.empty();

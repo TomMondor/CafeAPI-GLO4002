@@ -8,10 +8,10 @@ import ca.ulaval.glo4002.cafe.api.customer.registration.request.CheckInRequest;
 import ca.ulaval.glo4002.cafe.api.customer.registration.request.CheckOutRequest;
 import ca.ulaval.glo4002.cafe.api.customer.registration.request.ReservationRequest;
 import ca.ulaval.glo4002.cafe.api.customer.registration.response.ReservationResponse;
-import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckInCustomerParams;
-import ca.ulaval.glo4002.cafe.service.customer.parameter.CheckOutCustomerParams;
-import ca.ulaval.glo4002.cafe.service.registration.RegistrationService;
-import ca.ulaval.glo4002.cafe.service.registration.parameter.ReservationRequestParams;
+import ca.ulaval.glo4002.cafe.application.customer.parameter.CheckInCustomerParams;
+import ca.ulaval.glo4002.cafe.application.customer.parameter.CheckOutCustomerParams;
+import ca.ulaval.glo4002.cafe.application.registration.RegistrationService;
+import ca.ulaval.glo4002.cafe.application.registration.parameter.ReservationRequestParams;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.GET;

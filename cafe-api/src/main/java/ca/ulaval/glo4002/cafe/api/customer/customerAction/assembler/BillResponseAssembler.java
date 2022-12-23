@@ -1,7 +1,7 @@
 package ca.ulaval.glo4002.cafe.api.customer.customerAction.assembler;
 
 import ca.ulaval.glo4002.cafe.api.customer.customerAction.response.BillResponse;
-import ca.ulaval.glo4002.cafe.service.customer.dto.BillDTO;
+import ca.ulaval.glo4002.cafe.application.customer.dto.BillDTO;
 
 public class BillResponseAssembler {
     public BillResponse toBillResponse(BillDTO billDTO) {
