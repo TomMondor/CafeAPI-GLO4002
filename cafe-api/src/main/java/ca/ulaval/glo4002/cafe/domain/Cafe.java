@@ -27,6 +27,8 @@ import ca.ulaval.glo4002.cafe.domain.reservation.ReservationStrategyFactory;
 import ca.ulaval.glo4002.cafe.domain.reservation.strategies.ReservationStrategy;
 import ca.ulaval.glo4002.cafe.domain.sale.PointOfSale;
 import ca.ulaval.glo4002.cafe.domain.sale.bill.Bill;
+import ca.ulaval.glo4002.cafe.domain.sale.bill.BillFactory;
+import ca.ulaval.glo4002.cafe.domain.sale.bill.tax.TaxCalculator;
 
 public class Cafe {
     private final ReservationStrategyFactory reservationStrategyFactory;
@@ -47,7 +49,7 @@ public class Cafe {
         this.layout = layoutFactory.createLayout(cafeConfiguration.cubeSize(), cubeNames);
 
         this.inventory = new Inventory();
-        this.pointOfSale = new PointOfSale();
+        this.pointOfSale = new PointOfSale(new BillFactory(new TaxCalculator()));
         this.menu = menu;
 
         updateConfiguration(cafeConfiguration);
@@ -83,7 +85,7 @@ public class Cafe {
         pointOfSale.openBillForCustomer(customer.getId());
     }
 
-    public Seat getSeatByCustomerId(CustomerId customerId) {
+    public Seat findSeatByCustomerId(CustomerId customerId) {
         return layout.getSeatByCustomerId(customerId);
     }
 
@@ -117,7 +119,7 @@ public class Cafe {
 
     public void placeOrder(CustomerId customerId, PendingOrder order) {
         Order approvedOrder = menu.approveOrder(order);
-        if (!layout.isCustomerAlreadySeated(customerId)) {
+        if (!pointOfSale.hasOpenBill(customerId)) {
             throw new CustomerNotFoundException();
         }
         inventory.useIngredients(approvedOrder.ingredientsNeeded());
@@ -128,12 +130,12 @@ public class Cafe {
         inventory.add(ingredients);
     }
 
-    public Bill getCustomerBill(CustomerId customerId) {
+    public Bill findCustomerBill(CustomerId customerId) {
         return pointOfSale.findBillByCustomerId(customerId);
     }
 
     private void checkIfCustomerAlreadyVisitedToday(CustomerId customerId) {
-        if (pointOfSale.hasProducedBill(customerId) || layout.isCustomerAlreadySeated(customerId)) {
+        if (pointOfSale.hasProducedBill(customerId) || pointOfSale.hasOpenBill(customerId)) {
             throw new CustomerAlreadyVisitedException();
         }
     }

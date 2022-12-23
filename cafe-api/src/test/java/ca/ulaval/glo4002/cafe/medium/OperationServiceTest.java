@@ -84,7 +84,7 @@ public class OperationServiceTest {
         cafe.checkIn(A_CUSTOMER, Optional.empty());
 
         cafe = cafeRepository.get();
-        assertThrows(CustomerNoBillException.class, () -> cafe.getCustomerBill(A_CUSTOMER.getId()));
+        assertThrows(CustomerNoBillException.class, () -> cafe.findCustomerBill(A_CUSTOMER.getId()));
     }
 
     @Test

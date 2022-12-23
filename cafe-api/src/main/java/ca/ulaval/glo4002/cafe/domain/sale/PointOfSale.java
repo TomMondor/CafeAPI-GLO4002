@@ -15,7 +15,12 @@ import ca.ulaval.glo4002.cafe.domain.sale.bill.BillFactory;
 public class PointOfSale {
     private final HashMap<CustomerId, Bill> bills = new HashMap<>();
     private final HashMap<CustomerId, Order> orders = new HashMap<>();
+    private final BillFactory billFactory;
     private TipRate groupTipRate = new TipRate(0);
+
+    public PointOfSale(BillFactory billFactory) {
+        this.billFactory = billFactory;
+    }
 
     public void updateGroupTipRate(TipRate groupTipRate) {
         this.groupTipRate = groupTipRate;
@@ -45,7 +50,6 @@ public class PointOfSale {
     public void produceBill(CustomerId customerId, Location location, boolean isGroupMember) {
         Order order = orders.get(customerId);
         orders.remove(customerId);
-        BillFactory billFactory = new BillFactory(); //TODO
         Bill bill = billFactory.createBill(order, location, groupTipRate, isGroupMember);
         bills.put(customerId, bill);
     }

@@ -115,8 +115,4 @@ public class Layout {
     private boolean isLastFromGroup(GroupName groupName) {
         return getSeatsFromCubes().stream().filter(seat -> groupName.equals(seat.getGroupName().orElse(null))).filter(Seat::isCurrentlyOccupied).count() == 1;
     }
-
-    public boolean isCustomerAlreadySeated(CustomerId customerId) {
-        return getSeatsFromCubes().stream().filter(Seat::isCurrentlyOccupied).anyMatch(seat -> customerId.equals(seat.getCustomer().get().getId()));
-    }
 }

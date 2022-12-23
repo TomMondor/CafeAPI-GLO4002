@@ -20,7 +20,7 @@ public class CustomerService {
 
     public CustomerDTO getCustomer(CustomerId customerId) {
         Cafe cafe = cafeRepository.get();
-        Seat seat = cafe.getSeatByCustomerId(customerId);
+        Seat seat = cafe.findSeatByCustomerId(customerId);
 
         return CustomerDTO.fromSeat(seat);
     }
@@ -35,7 +35,7 @@ public class CustomerService {
 
     public BillDTO getCustomerBill(CustomerId customerId) {
         Cafe cafe = cafeRepository.get();
-        Bill bill = cafe.getCustomerBill(customerId);
+        Bill bill = cafe.findCustomerBill(customerId);
 
         return BillDTO.fromBill(bill);
     }

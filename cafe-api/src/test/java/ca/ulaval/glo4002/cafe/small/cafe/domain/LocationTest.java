@@ -9,7 +9,6 @@ import ca.ulaval.glo4002.cafe.domain.Location;
 import ca.ulaval.glo4002.cafe.domain.Province;
 import ca.ulaval.glo4002.cafe.domain.State;
 import ca.ulaval.glo4002.cafe.domain.exception.InvalidConfigurationCountryException;
-import ca.ulaval.glo4002.cafe.domain.sale.bill.Tax;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,43 +20,37 @@ public class LocationTest {
     private static final String A_VALID_STATE = "AL";
 
     @Test
-    public void givenLocationWithCountryAndProvince_whenGettingTaxPercentage_shouldReturnRightTaxPercentage() {
-        Location location = new Location(Country.CA, Optional.of(Province.QC), Optional.empty());
-        Tax expectedTax = Country.CA.getTax().add(Province.QC.getTax());
-
-        Tax taxReceived = location.getTaxPercentage();
-
-        assertEquals(expectedTax, taxReceived);
+    public void givenCountryWithProvinceButNoProvince_whenCreatingLocation_thenThrowInvalidConfigurationCountryException() {
+        assertThrows(InvalidConfigurationCountryException.class,
+            () -> new Location(Country.CA, Optional.empty(), Optional.empty()));
     }
 
     @Test
-    public void givenLocationWithCountryAndState_whenGettingTaxPercentage_shouldReturnRightTaxPercentage() {
-        Location location = new Location(Country.US, Optional.empty(), Optional.of(State.CA));
-        Tax expectedTax = Country.US.getTax().add(State.CA.getTax());
-
-        Tax taxReceived = location.getTaxPercentage();
-
-        assertEquals(expectedTax, taxReceived);
+    public void givenCountryWithStateButNoState_whenCreatingLocation_thenThrowInvalidConfigurationCountryException() {
+        assertThrows(InvalidConfigurationCountryException.class,
+            () -> new Location(Country.US, Optional.empty(), Optional.empty()));
     }
 
     @Test
-    public void givenLocationWithOnlyCountry_whenGettingTaxPercentage_shouldReturnRightTaxPercentage() {
-        Location location = new Location(Country.CL, Optional.empty(), Optional.empty());
-        Tax expectedTax = Country.CL.getTax();
+    public void givenProvinceLessCountryAndProvince_whenCreatingLocation_thenProvinceIsIgnored() {
+        Location location = new Location(Country.US, Optional.of(Province.QC), Optional.of(State.AL));
 
-        Tax taxReceived = location.getTaxPercentage();
-
-        assertEquals(expectedTax, taxReceived);
+        assertEquals(Optional.empty(), location.province());
     }
 
     @Test
-    public void givenLocationWithNoneCountry_whenGettingTaxPercentage_shouldReturnZero() {
-        Location location = new Location(Country.None, Optional.empty(), Optional.empty());
-        Tax expectedTax = Country.None.getTax();
+    public void givenStateLessCountryAndState_whenCreatingLocation_thenStateIsIgnored() {
+        Location location = new Location(Country.CA, Optional.of(Province.QC), Optional.of(State.AL));
 
-        Tax taxReceived = location.getTaxPercentage();
+        assertEquals(Optional.empty(), location.state());
+    }
 
-        assertEquals(expectedTax, taxReceived);
+    @Test
+    public void givenProvinceLessAndStateLessCountryButProvinceAndState_whenCreatingLocation_thenProvinceAndStateAreIgnored() {
+        Location location = new Location(Country.CL, Optional.of(Province.QC), Optional.of(State.AL));
+
+        assertEquals(Optional.empty(), location.province());
+        assertEquals(Optional.empty(), location.state());
     }
 
     @Test

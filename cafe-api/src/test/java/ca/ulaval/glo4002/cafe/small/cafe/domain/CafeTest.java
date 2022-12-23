@@ -199,7 +199,7 @@ public class CafeTest {
 
         cafe.checkIn(aCustomer, Optional.empty());
 
-        assertEquals(new SeatNumber(4), cafe.getSeatByCustomerId(aCustomer.getId()).getNumber());
+        assertEquals(new SeatNumber(4), cafe.findSeatByCustomerId(aCustomer.getId()).getNumber());
     }
 
     @Test
@@ -211,7 +211,7 @@ public class CafeTest {
 
         cafe.checkIn(aCustomer, Optional.of(A_RESERVATION_FOR_TWO.name()));
 
-        assertEquals(new SeatNumber(2), cafe.getSeatByCustomerId(aCustomer.getId()).getNumber());
+        assertEquals(new SeatNumber(2), cafe.findSeatByCustomerId(aCustomer.getId()).getNumber());
     }
 
     @Test
@@ -246,7 +246,7 @@ public class CafeTest {
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
 
-        Seat actualSeat = cafe.getSeatByCustomerId(aCustomer.getId());
+        Seat actualSeat = cafe.findSeatByCustomerId(aCustomer.getId());
 
         assertEquals(aCustomer, actualSeat.getCustomer().get());
         assertEquals(cafe.getLayout().getCubes().get(0).getSeats().get(0), actualSeat);
@@ -256,7 +256,7 @@ public class CafeTest {
     public void givenNotCheckedInCustomer_whenGettingSeatByCustomerId_shouldThrowCustomerNotFoundException() {
         Customer aCustomer = new CustomerFixture().build();
 
-        assertThrows(CustomerNotFoundException.class, () -> cafe.getSeatByCustomerId(aCustomer.getId()));
+        assertThrows(CustomerNotFoundException.class, () -> cafe.findSeatByCustomerId(aCustomer.getId()));
     }
 
     @Test
@@ -265,7 +265,7 @@ public class CafeTest {
         cafe.checkIn(aCustomer, Optional.empty());
         cafe.close();
 
-        assertThrows(CustomerNotFoundException.class, () -> cafe.getSeatByCustomerId(aCustomer.getId()));
+        assertThrows(CustomerNotFoundException.class, () -> cafe.findSeatByCustomerId(aCustomer.getId()));
     }
 
     @Test
@@ -341,7 +341,7 @@ public class CafeTest {
         cafe.placeOrder(aCustomer.getId(), THE_MATCHING_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
-        assertEquals(new Amount(0), cafe.getCustomerBill(aCustomer.getId()).taxes());
+        assertEquals(new Amount(0), cafe.findCustomerBill(aCustomer.getId()).taxes());
     }
 
     @Test
@@ -356,7 +356,7 @@ public class CafeTest {
         cafe.placeOrder(aCustomer.getId(), THE_MATCHING_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
-        assertNotEquals(new Amount(0), cafe.getCustomerBill(aCustomer.getId()).tip());
+        assertNotEquals(new Amount(0), cafe.findCustomerBill(aCustomer.getId()).tip());
     }
 
     @Test
@@ -393,7 +393,7 @@ public class CafeTest {
 
         cafe.placeOrder(aCustomer.getId(), new PendingOrder(List.of(A_COFFEE_NAME)));
         cafe.checkOut(aCustomer.getId());
-        Bill bill = cafe.getCustomerBill(aCustomer.getId());
+        Bill bill = cafe.findCustomerBill(aCustomer.getId());
         assertEquals(AN_AMOUNT, bill.subtotal());
     }
 
@@ -553,15 +553,15 @@ public class CafeTest {
 
         cafe.checkOut(aCustomer.getId());
 
-        assertEquals(new Amount(0), cafe.getCustomerBill(aCustomer.getId()).total());
-        assertThrows(CustomerNotFoundException.class, () -> cafe.getSeatByCustomerId(aCustomer.getId()));
+        assertEquals(new Amount(0), cafe.findCustomerBill(aCustomer.getId()).total());
+        assertThrows(CustomerNotFoundException.class, () -> cafe.findSeatByCustomerId(aCustomer.getId()));
     }
 
     @Test
     public void givenNonexistentCustomer_whenGettingBill_shouldThrowCustomerNotFoundException() {
         Cafe cafe = new Cafe(SOME_CUBE_NAMES, new CafeConfigurationFixture().build(), AN_EMPTY_MENU);
 
-        assertThrows(CustomerNotFoundException.class, () -> cafe.getCustomerBill(new CustomerId("Invalid")));
+        assertThrows(CustomerNotFoundException.class, () -> cafe.findCustomerBill(new CustomerId("Invalid")));
     }
 
     @Test
@@ -569,7 +569,7 @@ public class CafeTest {
         Customer aCustomer = new CustomerFixture().build();
         cafe.checkIn(aCustomer, Optional.empty());
 
-        assertThrows(CustomerNoBillException.class, () -> cafe.getCustomerBill(aCustomer.getId()));
+        assertThrows(CustomerNoBillException.class, () -> cafe.findCustomerBill(aCustomer.getId()));
     }
 
     @Test
@@ -578,7 +578,7 @@ public class CafeTest {
         cafe.checkIn(aCustomer, Optional.empty());
         cafe.checkOut(aCustomer.getId());
 
-        Bill bill = cafe.getCustomerBill(aCustomer.getId());
+        Bill bill = cafe.findCustomerBill(aCustomer.getId());
 
         assertTrue(bill.order().items().isEmpty());
         assertEquals(new Amount(0), bill.subtotal());
@@ -594,7 +594,7 @@ public class CafeTest {
         cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
-        Bill bill = cafe.getCustomerBill(aCustomer.getId());
+        Bill bill = cafe.findCustomerBill(aCustomer.getId());
 
         assertEquals(AN_ORDER.items(), bill.order().items());
     }
@@ -607,7 +607,7 @@ public class CafeTest {
         cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
-        Bill bill = cafe.getCustomerBill(aCustomer.getId());
+        Bill bill = cafe.findCustomerBill(aCustomer.getId());
 
         double expectedSubtotal = THE_MATCHING_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
         assertEquals(expectedSubtotal, bill.subtotal().value());
@@ -622,7 +622,7 @@ public class CafeTest {
         cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
-        Bill bill = cafe.getCustomerBill(aCustomer.getId());
+        Bill bill = cafe.findCustomerBill(aCustomer.getId());
 
         float expectedSubtotal = (float) THE_MATCHING_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
         float taxes = expectedSubtotal * 0.19f;
@@ -639,7 +639,7 @@ public class CafeTest {
         cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
-        Bill bill = cafe.getCustomerBill(aCustomer.getId());
+        Bill bill = cafe.findCustomerBill(aCustomer.getId());
 
         float subtotal = (float) THE_MATCHING_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
         assertEquals(new Amount(subtotal * 0.14975f), bill.taxes());
@@ -654,7 +654,7 @@ public class CafeTest {
         cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
-        Bill bill = cafe.getCustomerBill(aCustomer.getId());
+        Bill bill = cafe.findCustomerBill(aCustomer.getId());
 
         float subtotal = (float) THE_MATCHING_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
         assertEquals(new Amount(subtotal * 0.06f), bill.taxes());
@@ -669,7 +669,7 @@ public class CafeTest {
         cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
-        Bill bill = cafe.getCustomerBill(aCustomer.getId());
+        Bill bill = cafe.findCustomerBill(aCustomer.getId());
 
         assertEquals(new Amount(0), bill.tip());
     }
@@ -684,7 +684,7 @@ public class CafeTest {
         cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
-        Bill bill = cafe.getCustomerBill(aCustomer.getId());
+        Bill bill = cafe.findCustomerBill(aCustomer.getId());
 
         float subtotal = (float) THE_MATCHING_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
         assertEquals(new Amount(subtotal * 0.15f), bill.tip());
@@ -699,7 +699,7 @@ public class CafeTest {
         cafe.placeOrder(aCustomer.getId(), A_PENDING_ORDER);
         cafe.checkOut(aCustomer.getId());
 
-        Bill bill = cafe.getCustomerBill(aCustomer.getId());
+        Bill bill = cafe.findCustomerBill(aCustomer.getId());
 
         float subtotal = (float) THE_MATCHING_ORDER.items().stream().mapToDouble(coffee -> coffee.price().value()).sum();
         assertEquals(new Amount(subtotal * 0.19f), bill.taxes());
@@ -737,7 +737,7 @@ public class CafeTest {
 
         cafe.close();
 
-        assertThrows(CustomerNotFoundException.class, () -> cafe.getSeatByCustomerId(aCustomer.getId()));
+        assertThrows(CustomerNotFoundException.class, () -> cafe.findSeatByCustomerId(aCustomer.getId()));
     }
 
     @Test
@@ -806,7 +806,7 @@ public class CafeTest {
         cafe.close();
         cafe.checkIn(aCustomer, Optional.empty());
 
-        assertThrows(CustomerNoBillException.class, () -> cafe.getCustomerBill(aCustomer.getId()));
+        assertThrows(CustomerNoBillException.class, () -> cafe.findCustomerBill(aCustomer.getId()));
     }
 
     private Cafe cafeWithEnoughInventory() {

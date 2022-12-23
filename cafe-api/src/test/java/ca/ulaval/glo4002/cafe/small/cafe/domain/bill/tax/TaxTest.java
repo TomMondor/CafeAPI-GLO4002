@@ -1,8 +1,8 @@
-package ca.ulaval.glo4002.cafe.small.cafe.domain.bill;
+package ca.ulaval.glo4002.cafe.small.cafe.domain.bill.tax;
 
 import org.junit.jupiter.api.Test;
 
-import ca.ulaval.glo4002.cafe.domain.sale.bill.Tax;
+import ca.ulaval.glo4002.cafe.domain.sale.bill.tax.Tax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

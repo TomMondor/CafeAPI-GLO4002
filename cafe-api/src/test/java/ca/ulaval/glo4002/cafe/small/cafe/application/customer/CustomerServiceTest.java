@@ -59,7 +59,7 @@ public class CustomerServiceTest {
 
     @Test
     public void whenGettingCustomer_shouldGetCafe() {
-        when(mockCafe.getSeatByCustomerId(CUSTOMER_ID)).thenReturn(SEAT_WITH_CUSTOMER);
+        when(mockCafe.findSeatByCustomerId(CUSTOMER_ID)).thenReturn(SEAT_WITH_CUSTOMER);
 
         customersService.getCustomer(CUSTOMER_ID);
 
@@ -68,16 +68,16 @@ public class CustomerServiceTest {
 
     @Test
     public void whenGettingCustomer_shouldGetCustomerSeat() {
-        when(mockCafe.getSeatByCustomerId(CUSTOMER_ID)).thenReturn(SEAT_WITH_CUSTOMER);
+        when(mockCafe.findSeatByCustomerId(CUSTOMER_ID)).thenReturn(SEAT_WITH_CUSTOMER);
 
         customersService.getCustomer(CUSTOMER_ID);
 
-        verify(mockCafe).getSeatByCustomerId(CUSTOMER_ID);
+        verify(mockCafe).findSeatByCustomerId(CUSTOMER_ID);
     }
 
     @Test
     public void whenGettingCustomer_shouldReturnMatchingCustomerDTO() {
-        when(mockCafe.getSeatByCustomerId(CUSTOMER_ID)).thenReturn(SEAT_WITH_CUSTOMER);
+        when(mockCafe.findSeatByCustomerId(CUSTOMER_ID)).thenReturn(SEAT_WITH_CUSTOMER);
 
         CustomerDTO actualCustomerDTO = customersService.getCustomer(CUSTOMER_ID);
 
@@ -137,15 +137,15 @@ public class CustomerServiceTest {
 
     @Test
     public void givenCheckedOutCustomer_whenGettingBill_shouldGetBillFromCafe() {
-        when(mockCafe.getCustomerBill(CUSTOMER_ID)).thenReturn(A_VALID_BILL);
+        when(mockCafe.findCustomerBill(CUSTOMER_ID)).thenReturn(A_VALID_BILL);
         customersService.getCustomerBill(CUSTOMER_ID);
 
-        verify(mockCafe).getCustomerBill(CUSTOMER_ID);
+        verify(mockCafe).findCustomerBill(CUSTOMER_ID);
     }
 
     @Test
     public void whenGettingBill_shouldGetCafe() {
-        when(mockCafe.getCustomerBill(CUSTOMER_ID)).thenReturn(A_VALID_BILL);
+        when(mockCafe.findCustomerBill(CUSTOMER_ID)).thenReturn(A_VALID_BILL);
         customersService.getCustomerBill(CUSTOMER_ID);
 
         verify(cafeRepository).get();
@@ -153,7 +153,7 @@ public class CustomerServiceTest {
 
     @Test
     public void whenGettingBill_shouldReturnMatchingBillDTO() {
-        when(mockCafe.getCustomerBill(CUSTOMER_ID)).thenReturn(A_VALID_BILL);
+        when(mockCafe.findCustomerBill(CUSTOMER_ID)).thenReturn(A_VALID_BILL);
 
         BillDTO actualBillDTO = customersService.getCustomerBill(CUSTOMER_ID);
 
