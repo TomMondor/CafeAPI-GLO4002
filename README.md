@@ -1,3 +1,16 @@
+# Mise en contexte
+Projet académique réalisé en équipe dans le cadre du cours GLO4002 de l'Université Laval, à l'automne 2022.
+
+La majeure partie du code (i.e. le contenu du `Initial commit` du `github-classroom[bot]`) a été développée par toute l'équipe (voir `CONTRIBUTORS.md`).
+
+Les _commits_ suivants ont été ajoutés par moi-même, dans le cadre de la partie individuelle du projet.
+
+Le projet consiste en une _API_ permettant de réaliser différentes tâches liées à la gestion d'un Café.
+Une attention particulière a été portée aux bonnes pratiques de développement et de test, au respect des principes SOLID, ainsi qu'à l'architecture.
+
+# Contributeurs
+Voir le fichier `CONTRIBUTORS.md` pour la liste des membres de cette équipe (leurs nombreux _commits_ ont été regroupés dans le `Initial commit` du `github-classroom[bot]`).
+
 # Requis
 
 * Java 18 (openJDK seulement)
