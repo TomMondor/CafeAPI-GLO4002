@@ -14,7 +14,7 @@
 
 _Le setup est recommandé pour IntelliJ_
 
-* À partir du [Github](https://github.com/GLO4002UL/projet-2022---eq14-TomMondor.git) du projet, cloner le projet sur votre poste de travail.
+* À partir du [Github](https://github.com/TomMondor/CafeAPI-GLO4002.git) du projet, cloner le projet sur votre poste de travail.
 
 * Installer la bonne version de Java.
 
@@ -82,5 +82,5 @@ Sélectionner le fichier checkstyle.xml à la root du projet
 
 # Conventions et Processus
 
-Pour plus de détails sur les méthodologies, conventions et processus employés par l'équipe, consultez le [wiki](https://github.com/GLO4002UL/projet-2022---eq14-TomMondor/wiki).
+Pour plus de détails sur les méthodologies, conventions et processus employés par l'équipe, consultez le [wiki](https://github.com/TomMondor/CafeAPI-GLO4002/wiki).
 
